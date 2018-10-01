@@ -1,40 +1,205 @@
-(function(global) {
+(function (global) {
 
-    global.App.Controller('app', './', function($scope, _update) {
+    global.App.Controller('app', './', function ($scope, _update) {
         $scope.title = "App works!";
 
-        setTimeout(function() {
+        setTimeout(function () {
             $scope.title = "Hello World!";
             _update();
         }, 3000)
     });
 
 })(Function('return this')());
-(function(global) {
+(function (global) {
 
     var appRoutes = [
-        { path: '', redirect: 'home' },
-        { path: 'home', controller: 'main-layout' }
+        {path: '', redirect: 'home'},
+        {path: 'home', controller: 'main-layout'}
     ];
 
     new global.App.Router(appRoutes);
 
 })(Function('return this')());
-(function(global) {
+(function (global) {
 
-    global.App.Controller('main-layout', '/main-layout/', function($scope, _update) {
+    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
         $scope.title = "Main Layout";
 
-        $scope.buttonClicked = function(pageName) {
+        $scope.buttonClicked = function (pageName) {
             global.App.Router().navigateTo(pageName);
         };
     });
 
 })(Function('return this')());
-(function(global) {
+(function (global) {
 
-    global.App.Pipe('split', function(value, data) {
+    global.App.Pipe('split', function (value, data) {
         return value.split(data);
+    });
+
+})(Function('return this')());
+(function (global) {
+
+    global.App.Controller('provafinale', './components/test/', function ($scope, _update) {
+        $scope.getInput('provaBoolean');
+        $scope.getInput('inputArray');
+        $scope.getInput('definedObject');
+        $scope.getInput('inputObject');
+        $scope.getInput('definedArray');
+
+        console.log('provafinale', $scope.provaBoolean, $scope.inputArray, $scope.definedObject);
+        $scope.getFullName = function () {
+            var result = '', counter = 0;
+            for (var i in $scope.definedObject) {
+                if (typeof $scope.inputArray[counter] === 'string') {
+                    result += $scope.inputArray[counter] + ' ';
+                }
+                if (typeof $scope.definedObject[i] === 'string') {
+                    result += $scope.definedObject[i];
+                }
+                counter++;
+            }
+            return result;
+        };
+
+        console.log('prova2', $scope.inputObject, $scope.definedArray);
+
+        $scope.getStringElements = function () {
+            var results = $scope.definedArray.filter(Boolean);
+            for (var i in $scope.inputObject) {
+                if ($scope.inputObject[i]) {
+                    results.push($scope.inputObject[i]);
+                }
+            }
+            console.log('getStringElements', results);
+            return results.join(' ');
+        }
+    });
+
+})(Function('return this')());
+(function (global) {
+
+    global.App.Controller('test-type-input', './components/test/', function ($scope, _update) {
+        $scope.inputValueEmpty = null;
+        $scope.inputValueBoolean = true;
+        $scope.inputValueNumber = 9;
+        $scope.inputValueString = 'rexhina';
+        console.log('test-type-input:primitive', $scope.inputValueEmpty, $scope.inputValueBoolean, $scope.inputValueNumber, $scope.inputValueString);
+        $scope.inputValueObject = {
+            empty: null, boolean: false, number: 9, string: 'rexhina'
+        };
+        $scope.inputValueArray = [
+            null, true, 9, 'rexhina'
+        ];
+
+        $scope.inputValueFunction = function (valueInputted) {
+            valueInputted = valueInputted || 'test-type-input';
+            var valueFunction = 'valueFunction';
+            if (valueInputted === $scope.inputValueNumber) {
+                $scope.inputValueBoolean = false;
+            }
+            console.log(valueInputted + ':inputValueFunction', valueFunction, $scope.inputValueNumber);
+            return valueFunction + $scope.inputValueNumber;
+        };
+        $scope.inputValueDate = new Date(2017, 11, 5);
+        console.log('test-type-input:complex', $scope.inputValueObject, $scope.inputValueArray, $scope.inputValueFunction, $scope.inputValueFunction(), $scope.inputValueDate);
+
+        /** Helper Function */
+        $scope.inputTypeOf = function (inputValue) {
+            return typeof inputValue;
+        };
+
+        // Test area
+        $scope.inputValueObjectFunction = function () {
+            var result = Object.keys($scope.inputValueObject).map(function (key) {
+                return $scope.inputValueObject[key];
+            });
+            console.log('test-type-input:inputValueObjectFunction', Object.keys($scope.inputValueObject), result);
+            return result.filter(function (e) {
+                return typeof e === 'number';
+            });
+        };
+        $scope.inputValueArrayFunction = function () {
+            var rez = Object.keys($scope.inputValueObject).map(function (key) {
+
+                return [$scope.inputValueObject[key] + $scope.inputValueArray];
+            });
+            console.log('test-type-input:inputValueArrayFunction', $scope.inputValueArray, rez, Object.keys($scope.inputValueObject));
+
+        };
+
+        // End test area
+    });
+
+})(Function('return this')());
+(function (global) {
+
+    global.App.Controller('test-type', './components/test/', function ($scope, _update) {
+        var customVar = 'Dite e bukur';
+
+        $scope.getInput('inputEmpty');
+        $scope.getInput('inputBoolean');
+        $scope.getInput('inputNumber');
+        $scope.getInput('inputString');
+        console.log('test-type:primitiveInputted', $scope.inputEmpty, $scope.inputBoolean, $scope.inputNumber, $scope.inputString);
+        $scope.getInput('inputObject');
+        $scope.getInput('inputArray');
+        $scope.getInput('inputFunction');
+        $scope.getInput('inputDate');
+        console.log('test-type:complexInputted', $scope.inputObject, $scope.inputArray, $scope.inputFunction, $scope.inputDate);
+        $scope.definedEmpty = '';
+        $scope.definedBoolean = true;
+        $scope.definedNumber = 3;
+        $scope.definedString = 'Prifti';
+        console.log('test-type:primitiveDefined', $scope.definedBoolean, $scope.definedNumber, $scope.definedString);
+        $scope.definedObject = {
+            empty: $scope.definedEmpty,
+            boolean: $scope.inputObject.boolean,
+            number: $scope.inputArray[2],
+            string: $scope.definedString
+        };
+        $scope.definedArray = [
+            $scope.definedEmpty, $scope.inputObject.boolean, $scope.definedNumber, $scope.definedString
+        ];
+        $scope.definedFunction = function () {
+            return $scope.inputFunction('test-type');
+        };
+        $scope.definedDate = new Date();
+        console.log('test-type:complexDefined', $scope.definedObject, $scope.definedArray, $scope.definedFunction, $scope.definedDate);
+
+        $scope.eventClicked = function () {
+            processingResults();
+            console.log('eventClicked', $scope.resultNumber, String, customVar, $scope);
+            _update();
+        };
+
+        /**
+         Ne kete seksion kemi integrimin e nje funksioni brenda nje funksioni tjeter i cili do procesoje te gjitha rezultatet e llojeve te tipeve qe kemi deklaruar me siper.
+         */
+        function processingResults() {
+            $scope.resultEmptyAddOperator = $scope.inputEmpty + $scope.definedEmpty;
+            $scope.resultNumberAddOperator = $scope.inputNumber + $scope.definedNumber;
+            $scope.resultAndBoolean = $scope.inputBoolean && $scope.definedBoolean;
+            $scope.resultStringAddOperator = $scope.inputString + $scope.definedString;
+            $scope.resultArrayOfArray = $scope.inputArray.concat($scope.definedArray);
+            $scope.resultArrayOfObject = [$scope.inputObject, $scope.definedObject];
+            $scope.resultCallFunction = $scope.inputFunction($scope.definedFunction);
+            $scope.resultArrayOfDate = [$scope.inputDate, $scope.definedDate];
+
+            /**
+             * Prova te tjera ne lidhje me menyren se si mund te na therriten rezultatet qe ne duam
+             */
+            $scope.resultArrayOfArray = [$scope.resultArrayOfArray, $scope.resultArrayOfObject];
+            $scope.resultStringOfBoolean = customVar + $scope.inputBoolean;
+            $scope.resultNumberSubOperator = $scope.inputNumber - $scope.definedNumber;
+            console.log('test-type:processingResults', $scope.resultEmptyAddOperator, $scope.resultNumberAddOperator);
+            console.log($scope.resultAndBoolean, $scope.resultStringAddOperator, $scope.resultArrayOfArray);
+            console.log($scope.resultArrayOfObject, $scope.resultCallFunction, $scope.resultArrayOfDate,);
+            console.log($scope.resultArrayOfArray, $scope.resultStringOfBoolean, customVar, $scope.resultNumberSubOperator);
+        }
+
+        //debugger;
+
     });
 
 })(Function('return this')());

@@ -28,7 +28,7 @@ var AppConfig = {
 
 var DEST_PATH = "./dist/";
 
-gulp.task('compile-mvc', function() {
+gulp.task('compile-mvc', function () {
     return gulp.src(LibraryConfig.SOURCE)
         .pipe(concat(LibraryConfig.DEST_NAME + '.js'))
         .pipe(gulp.dest(DEST_PATH))
@@ -37,7 +37,7 @@ gulp.task('compile-mvc', function() {
         .pipe(gulp.dest(DEST_PATH));
 });
 
-gulp.task('compile-app', function() {
+gulp.task('compile-app', function () {
     return gulp.src(AppConfig.SOURCE)
         .pipe(concat(AppConfig.DEST_NAME + '.js'))
         .pipe(gulp.dest(DEST_PATH))
@@ -46,7 +46,7 @@ gulp.task('compile-app', function() {
         .pipe(gulp.dest(DEST_PATH));
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch('js/**/*.js', ['compile-mvc']);
     gulp.watch('app/**/*.js', ['compile-app']);
 });
