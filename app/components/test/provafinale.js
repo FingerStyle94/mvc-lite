@@ -33,7 +33,43 @@
             }
             console.log('getStringElements', results);
             return results.join(' ');
-        }
-    });
+        };
 
+        $scope.getNumberElements = function () {
+            var results = $scope.definedArray.filter(Number);
+            for (var i in $scope.inputObject) {
+                if (typeof $scope.inputObject[i] === 'number') {
+                    results.push($scope.inputObject[i]);
+                }
+            }
+            var sum = 0;
+            for (var i = 0; i < results.length; i++) {
+                sum += results[i]
+            }
+            console.log('getNumberElements', results, sum);
+            return results.reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue;
+            }, 0);
+        };
+
+        var printAll = function (compex) {
+            console.log('printAll:', compex,);
+            for (var i in compex) {
+                console.log("printAll[" + i + "]: ", compex[i]);
+            }
+        };
+
+        function printAllSecondary(compex) {
+            console.log('printAll:printAllSecondary:');
+            printAll(compex);
+        }
+
+
+        function printScope() {
+            printAll($scope);
+        }
+
+        console.log(printAll($scope.definedArray), printAllSecondary($scope.inputObject), printScope());
+
+    });
 })(Function('return this')());
