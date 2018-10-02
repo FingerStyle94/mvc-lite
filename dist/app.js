@@ -22,6 +22,30 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Model('TestModel', function (setData) {
+
+        this.getClientInfo = function (callback) {
+            console.log(callback);
+            global.Utils.Http.get('https://ip.nf/me.json', {}, function (response) {
+                console.log('TestModel:getClientInfo', response);
+                callback(response.ip);
+                setData(response.ip);
+            });
+        };
+
+        this.prova = gciTest;
+
+        function gciTest() {
+            console.log('TestModel:gciTest');
+            return 'rehims';
+        }
+
+    });
+
+})(Function('return this')());
+
+(function (global) {
+
     global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
         $scope.title = "Main Layout";
 
@@ -106,7 +130,7 @@
 
 
         function printScope() {
-            printAll($scope);
+            printAllSecondary($scope);
         }
 
         console.log(printAll($scope.definedArray), printAllSecondary($scope.inputObject), printScope());
@@ -238,4 +262,23 @@
 
     });
 
+})(Function('return this')());
+(function (global) {
+
+    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
+        var TestModel = global.App.getModel('TestModel');
+        $scope.clientData = false;
+
+        TestModel.getClientInfo(function (clientData) {
+            $scope.clientData = clientData;
+            _update();
+        });
+
+        function handleCallback(clientData) {
+            console.log(clientData);
+        }
+
+
+        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
+    });
 })(Function('return this')());

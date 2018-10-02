@@ -66,7 +66,7 @@
 
 
         function printScope() {
-            printAll($scope);
+            printAllSecondary($scope);
         }
 
         console.log(printAll($scope.definedArray), printAllSecondary($scope.inputObject), printScope());
