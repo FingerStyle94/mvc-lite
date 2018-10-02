@@ -42,7 +42,6 @@ gulp.task('compile-app', function () {
         .pipe(concat(AppConfig.DEST_NAME + '.js'))
         .pipe(gulp.dest(DEST_PATH))
         .pipe(rename(AppConfig.DEST_NAME + '.min.js'))
-        .pipe(uglify())
         .pipe(gulp.dest(DEST_PATH));
 });
 
