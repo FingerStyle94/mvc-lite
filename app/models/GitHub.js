@@ -13,7 +13,6 @@
         this.getGitHubData = function (path, params, callback) {
             console.log(path, params, callback);
             global.Utils.Http.get(Api + path, {params: params}, function (response) {
-                console.log('GitHub:getGitHubData', response);
                 callback(response);
                 setData(response);
             });
