@@ -9,7 +9,9 @@
         </br>
         <ul><li bind-for="e in entities" value="e" bind-value="e" bind-events="click: selectClicked(e)"></li></ul>
         </br>
+        <span bind-value="message"></span>
+        </br>
         <button bind-events="click: eventClicked()">Search</button>
     </div>
-    <div bind-if="gitHubData" controller="github-results"></div>
+    <div bind-if="gitHubData"  controller="github-results"></div>
 </div>

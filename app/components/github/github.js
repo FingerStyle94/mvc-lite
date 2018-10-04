@@ -6,14 +6,18 @@
         $scope.gitHubData = false;
         $scope.entity = false;
         $scope.term = false;
+        $scope.message = '';
 
         $scope.eventClicked = function () {
             if ($scope.entity && $scope.term) {
-                GitHub.getGitHubData($scope.entity, {q: $scope.term, page:3}, function (gitHubData) {
+                GitHub.getGitHubData($scope.entity, {q: $scope.term, page: 3}, function (gitHubData) {
                     $scope.gitHubData = gitHubData;
                     console.log('github:eventClicked', $scope.gitHubData);
                     _update();
                 });
+            } else {
+                $scope.message = 'Please choose types before click';
+                _update();
             }
         };
 
