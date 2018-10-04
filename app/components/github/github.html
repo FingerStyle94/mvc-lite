@@ -1,0 +1,17 @@
+<div>
+    <div>
+        <hr/>
+        <span>github</span>
+        </br>
+        </br>
+        <input type="text" name="search" placeholder="Search for.."  bind-events="focusout: inputFocusout()">
+        </br>
+        </br>
+        <ul><li bind-for="e in entities" value="e" bind-value="e" bind-events="click: selectClicked(e)"></li></ul>
+        </br>
+        <span bind-value="message"></span>
+        </br>
+        <button bind-events="click: eventClicked()">Search</button>
+    </div>
+    <div bind-if="gitHubData"  controller="github-results"></div>
+</div>

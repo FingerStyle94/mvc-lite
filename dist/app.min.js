@@ -22,6 +22,41 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
+        $scope.title = "Main Layout";
+
+        $scope.buttonClicked = function (pageName) {
+            global.App.Router().navigateTo(pageName);
+        };
+    });
+
+})(Function('return this')());
+(function (global) {
+
+    global.App.Model('GitHub', function (setData) {
+        var Api = "https://api.github.com/search/";
+        this.entities = ['repositories', 'users'];
+
+        /**
+         * This function is used to get Data from GitHub
+         * @param path string This parameter is used to switch between entities, Eg: 'repositories', 'users'...
+         * @param params object This parameter is used to send params through query string, Eg: {q: 'rexhinaIdobet'}
+         * @param callback function This parameter is used to handle the response
+         */
+        this.getGitHubData = function (path, params, callback) {
+            console.log(path, params, callback);
+            global.Utils.Http.get(Api + path, {params: params}, function (response) {
+                callback(response);
+                setData(response);
+            });
+        };
+
+    });
+
+})(Function('return this')());
+
+(function (global) {
+
     global.App.Model('TestModel', function (setData) {
 
         this.getClientInfo = function (callback) {
@@ -40,21 +75,11 @@
             return 'rehims';
         }
 
+
     });
 
 })(Function('return this')());
 
-(function (global) {
-
-    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
-        $scope.title = "Main Layout";
-
-        $scope.buttonClicked = function (pageName) {
-            global.App.Router().navigateTo(pageName);
-        };
-    });
-
-})(Function('return this')());
 (function (global) {
 
     global.App.Pipe('split', function (value, data) {
@@ -62,6 +87,79 @@
     });
 
 })(Function('return this')());
+(function (global) {
+
+    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
+        var TestModel = global.App.getModel('TestModel');
+        $scope.clientData = false;
+
+        TestModel.getClientInfo(function (clientData) {
+            $scope.clientData = clientData;
+            _update();
+        });
+
+        function handleCallback(clientData) {
+            console.log(clientData);
+        }
+
+
+        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
+    });
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('github-results', './components/github/', function ($scope, _update) {
+
+    });
+
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('github', './components/github/', function ($scope, _update) {
+        var GitHub = global.App.getModel('GitHub');
+        $scope.entities = GitHub.entities;
+        $scope.gitHubData = false;
+        $scope.entity = false;
+        $scope.term = false;
+        $scope.message = '';
+
+        $scope.eventClicked = function () {
+            if ($scope.entity && $scope.term) {
+                GitHub.getGitHubData($scope.entity, {q: $scope.term, page: 3}, function (gitHubData) {
+                    $scope.gitHubData = processResults(gitHubData);
+                    _update();
+                });
+            } else if (!$scope.entity) {
+                $scope.message = 'Please choose a entity';
+            } else if (!$scope.term) {
+                $scope.message = 'Please type a term to search';
+            } else {
+                $scope.message = 'Please choose types before click';
+            }
+            _update();
+        };
+
+        $scope.inputFocusout = function () {
+            console.log('github:inputFocusout', this.value);
+            $scope.term = this.value;
+            _update();
+        };
+
+        $scope.selectClicked = function (entity) {
+            console.log('github:selectClicked', entity);
+            $scope.entity = entity;
+            _update();
+        };
+
+        function processResults(results) {
+            console.log('github:processResults', results);
+            $scope.gitHubData = results;
+        }
+    });
+})(Function('return this')());
+
 (function (global) {
 
     global.App.Controller('provafinale', './components/test/', function ($scope, _update) {
@@ -262,23 +360,4 @@
 
     });
 
-})(Function('return this')());
-(function (global) {
-
-    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
-        var TestModel = global.App.getModel('TestModel');
-        $scope.clientData = false;
-
-        TestModel.getClientInfo(function (clientData) {
-            $scope.clientData = clientData;
-            _update();
-        });
-
-        function handleCallback(clientData) {
-            console.log(clientData);
-        }
-
-
-        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
-    });
 })(Function('return this')());
