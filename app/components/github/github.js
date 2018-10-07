@@ -36,6 +36,9 @@
             _update();
         };
 
+        /**
+         Ne kete seksion kemi  shfaqjen e te dhenave qe ne duam perkatesisht per entitetet users dhe repositories prandaj  do kontrollohen  me ane te nje indeksi [i] i cili do kape te dhenat qe duam nga results.
+         */
         function processResults(results) {
             var data = [];
             console.log('github:processResults', results);
@@ -47,6 +50,7 @@
                         login: results.items[i].login,
                         html_url: results.items[i].html_url
                     });
+
                 } else if ($scope.entity === 'repositories') {
                     data.push({
                         id: results.items[i].id,
@@ -56,7 +60,11 @@
                     });
                 }
             }
-           // data = results.items;
+            /**
+             Ne kete seksion do kthehen tre objekte : data , tipi , dhe term.
+             */
+
+            // data = results.items;
             return {
                 data: data,
                 type: $scope.entity,
