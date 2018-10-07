@@ -110,7 +110,8 @@
 (function (global) {
 
     global.App.Controller('github-results', './components/github/', function ($scope, _update) {
-
+        $scope.getInput('data');
+        console.log($scope.data);
     });
 
 })(Function('return this')());
@@ -127,7 +128,7 @@
 
         $scope.eventClicked = function () {
             if ($scope.entity && $scope.term) {
-                GitHub.getGitHubData($scope.entity, {q: $scope.term, page: 3}, function (gitHubData) {
+                GitHub.getGitHubData($scope.entity, {q: $scope.term}, function (gitHubData) {
                     $scope.gitHubData = processResults(gitHubData);
                     _update();
                 });
@@ -154,8 +155,31 @@
         };
 
         function processResults(results) {
+            var data = [];
             console.log('github:processResults', results);
-            $scope.gitHubData = results;
+            for (var i in results.items) {
+                if ($scope.entity === 'users') {
+                    data.push({
+                        id: results.items[i].id,
+                        score: results.items[i].score,
+                        login: results.items[i].login,
+                        html_url: results.items[i].html_url
+                    });
+                } else if ($scope.entity === 'repositories') {
+                    data.push({
+                        id: results.items[i].id,
+                        score: results.items[i].score,
+                        name: results.items[i].name,
+                        forks: results.items[i].forks
+                    });
+                }
+            }
+           // data = results.items;
+            return {
+                data: data,
+                type: $scope.entity,
+                term: $scope.term
+            };
         }
     });
 })(Function('return this')());
