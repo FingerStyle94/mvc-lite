@@ -33,13 +33,6 @@
 })(Function('return this')());
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -87,6 +80,13 @@
 
 })(Function('return this')());
 
+(function (global) {
+
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
 (function (global) {
 
     global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
@@ -208,8 +208,8 @@
              */
 
 
-            const result = data.filter(data => data.name === 'rexhinaIdobet');
-            console.log(result);
+            /**const result = data.filter(data => data.name === 'rexhinaIdobet');
+             console.log(result);*/
             /**
              Ne kete seksion na shfaq tre te dhenat e para per cdo user..
              */
@@ -218,22 +218,56 @@
             /**
              Ne kete seksion ......
              */
-            $scope.even  = function(element) {
-                return element.score  === 26.686699;
+            $scope.even = function (element) {
+                return element.score === 26.686699;
             };
 
 
             /**
              Ne kete seksion do kthehen tre objekte : data , tipi , dhe term.
              */
+            /**
+             console.log('Results', results);
+             var users = [];
+             for (var i in results.items)
+             if ($scope.entity === 'users'&& results.items === 'repositories')
+             users.push({users: results.items[i].users });
 
-            // data = results.items;
+
+             function getResults(list, keyGetter) {
+                const map = new Map();
+                list.forEach($scope.entity === 'repositories')=> {
+                    const key = keyGetter($scope.entity === 'repositories');
+                    const user = map.get(key);
+                    if (!user) {
+                        map.set(key, [$scope.entity === 'repositories']);
+                    } else {
+                        user.push($scope.entity === 'repositories');
+                    }
+                });
+                return map;
+            }
+             */
+            var extra = {}, group;
+            for (var i in results.items) {
+                group = results.items[i].owner.login;
+                if (!extra[group]) {
+                    extra[group] = [];
+                }
+                extra[group].push(results.items[i].name);
+            }
+            console.log('results', extra, results.items);
+            //data = results.items;
             return {
+                extra: extra,
                 data: data,
                 type: $scope.entity,
                 term: $scope.term
             };
+
         }
+
+
     });
 })(Function('return this')());
 
