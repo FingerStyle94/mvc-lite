@@ -27,5 +27,10 @@
                 <span bind-value="d.score"></span>
             </li>
         </ul>
+        <ul>
+            <li bind-for="d in data.data">
+                <span bind-value="sort()"></span>
+            </li>
+        </ul>
     </div>
 </div>

@@ -7,6 +7,8 @@
         $scope.entity = false;
         $scope.term = false;
         $scope.message = '';
+        $scope.found = false;
+        $scope.even = false;
 
         $scope.eventClicked = function () {
             if ($scope.entity && $scope.term) {
@@ -51,15 +53,58 @@
                         html_url: results.items[i].html_url
                     });
 
+
                 } else if ($scope.entity === 'repositories') {
                     data.push({
-                        id: results.items[i].id,
                         score: results.items[i].score,
+                        id: results.items[i].id,
                         name: results.items[i].name,
                         forks: results.items[i].forks
                     });
                 }
+                /**
+                 Ne kete seksion provojme includes ne array
+                 */
+
+                console.log(data.includes('netmask'));
+
+                /**
+                 Ne kete seksion kemi shfaqjen e te dhenave per userin rexhinaIdobet
+                 */
+
+                $scope.found = data.find(function (element) {
+                    return element.login === "rexhinaIdobet";
+                });
+
+                console.log($scope.found);
             }
+            /**
+             Ne kete seksion provojme sort ne array
+             */
+            data.sort(function (a, b) {
+                return b.id - a.id;
+            });
+            console.log(data.length);
+            /**
+             Ne kete seksion provojme arrayfilter.
+             */
+
+
+            const result = data.filter(data => data.name === 'rexhinaIdobet');
+            console.log(result);
+            /**
+             Ne kete seksion na shfaq tre te dhenat e para per cdo user..
+             */
+
+            console.log(data.slice(2));
+            /**
+             Ne kete seksion ......
+             */
+            $scope.even  = function(element) {
+                return element.score  === 26.686699;
+            };
+
+
             /**
              Ne kete seksion do kthehen tre objekte : data , tipi , dhe term.
              */
