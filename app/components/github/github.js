@@ -10,6 +10,7 @@
         $scope.found = false;
         $scope.even = false;
 
+
         $scope.eventClicked = function () {
             if ($scope.entity && $scope.term) {
                 GitHub.getGitHubData($scope.entity, {q: $scope.term}, function (gitHubData) {
@@ -105,47 +106,32 @@
             };
 
 
-            /**
-             Ne kete seksion do kthehen tre objekte : data , tipi , dhe term.
-             */
-            /**
-             console.log('Results', results);
-             var users = [];
-             for (var i in results.items)
-             if ($scope.entity === 'users'&& results.items === 'repositories')
-             users.push({users: results.items[i].users });
-
-
-             function getResults(list, keyGetter) {
-                const map = new Map();
-                list.forEach($scope.entity === 'repositories')=> {
-                    const key = keyGetter($scope.entity === 'repositories');
-                    const user = map.get(key);
-                    if (!user) {
-                        map.set(key, [$scope.entity === 'repositories']);
-                    } else {
-                        user.push($scope.entity === 'repositories');
-                    }
-                });
-                return map;
-            }
-             */
-            var extra = {}, group;
+            var extra = {}, group, info = [];
             for (var i in results.items) {
-                group = results.items[i].owner.login;
-                if (!extra[group]) {
-                    extra[group] = [];
+                if ($scope.entity === 'repositories') {
+                    group = results.items[i].owner.login;
+                    if (!extra[group]) {
+                        extra[group] = [];
+                    }
+                    extra[group].push(results.items[i].name);
                 }
-                extra[group].push(results.items[i].name);
+                if(results.items[i].login=== 'rexhinaIdobet'){
+                    info.push({
+                        score: results.items[i].score,
+                        html_url: results.items[i].html_url
+                    });
+                }
             }
-            console.log('results', extra, results.items);
+            console.log('results', extra, results.items, info);
             //data = results.items;
             return {
                 extra: extra,
                 data: data,
                 type: $scope.entity,
-                term: $scope.term
+                term: $scope.term,
+                info: info
             };
+
 
         }
 
