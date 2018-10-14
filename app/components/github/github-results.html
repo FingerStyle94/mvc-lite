@@ -33,4 +33,33 @@
             </li>
         </ul>
     </div>
+
+    <div bind-if=" data.type==='repositories'">
+        <ul>
+            <li bind-for=" e in data.extra">
+                <span bind-value="data.extra.type"></span>
+            </li>
+        </ul>
+        </br>
+        <ul>
+            <span>Kushti qe login='rexhinaIdobet'</span>
+
+            <li>
+                <span bind-value="data.info"></span>
+                </br>
+                <span bind-value="data.str"></span>
+                </br>
+                <span bind-value="data.st"></span>
+                </br>
+                <span bind-value="data.ok"></span>
+                </br>
+                <span bind-value="data.sr"></span>
+                </br>
+                <span bind-value="data.k"></span>
+                </br>
+                <span bind-value="data.up"></span>
+            </li>
+
+        </ul>
+    </div>
 </div>

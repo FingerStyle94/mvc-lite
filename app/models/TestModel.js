@@ -1,6 +1,20 @@
 (function (global) {
 
     global.App.Model('TestModel', function (setData) {
+        this.testData = function (level) {
+            level = level || 0;
+            level++;
+            return level > 9 ? {} : {
+                array: Object.keys(this.testData(level)).sort(),
+                object: this.testData(level),
+                boolean:  Math.random() >= 0.5,
+                string: 'test',
+                callback: function () {
+                    return level;
+                },
+                integer: this.testData(level).hasOwnProperty('callback') ? this.testData(level).callback() : 0
+            }
+        };
 
         this.getClientInfo = function (callback) {
             console.log(callback);
