@@ -4,7 +4,7 @@
         var TestModel = global.App.getModel('TestModel');
         $scope.clientData = false;
 
-        console.log( TestModel.testData());
+        console.log(TestModel.testData());
         TestModel.getClientInfo(function (clientData) {
             $scope.clientData = clientData;
             _update();

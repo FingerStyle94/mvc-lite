@@ -33,6 +33,13 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
+(function (global) {
+
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -65,11 +72,11 @@
                 array: Object.keys(this.testData(level)).sort(),
                 object: this.testData(level),
                 boolean:  Math.random() >= 0.5,
-                string: 'test',
+                string: Math.random().toString(36).substring(7),
                 callback: function () {
                     return level;
                 },
-                integer: this.testData(level).hasOwnProperty('callback') ? this.testData(level).callback() : 0
+                integer: this.testData(level).hasOwnProperty('callback') ? this.testData(level).callback() + Math.random() : 0
             }
         };
 
@@ -96,18 +103,11 @@
 
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
         var TestModel = global.App.getModel('TestModel');
         $scope.clientData = false;
 
-        console.log( TestModel.testData());
+        console.log(TestModel.testData());
         TestModel.getClientInfo(function (clientData) {
             $scope.clientData = clientData;
             _update();
