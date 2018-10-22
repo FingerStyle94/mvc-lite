@@ -7,7 +7,7 @@
             return level > 9 ? {} : {
                 array: Object.keys(this.testData(level)).sort(),
                 object: this.testData(level),
-                boolean:  Math.random() >= 0.5,
+                boolean: Math.random() >= 0.5,
                 string: Math.random().toString(36).substring(7),
                 callback: function () {
                     return level;

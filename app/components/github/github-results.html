@@ -8,7 +8,7 @@
     <div bind-if="data.type === 'users'">
         Kind: <span bind-value="data.type"></span>
         <ul>
-            <li bind-for="d in data.data">
+            <li bind-for="d in data.textData">
                 <span bind-value="d.id"></span>
                 <span bind-value="d.html_url"></span>
                 <span bind-value="d.login"></span>

@@ -33,13 +33,6 @@
 })(Function('return this')());
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -71,7 +64,7 @@
             return level > 9 ? {} : {
                 array: Object.keys(this.testData(level)).sort(),
                 object: this.testData(level),
-                boolean:  Math.random() >= 0.5,
+                boolean: Math.random() >= 0.5,
                 string: Math.random().toString(36).substring(7),
                 callback: function () {
                     return level;
@@ -103,11 +96,17 @@
 
 (function (global) {
 
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
+(function (global) {
+
     global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
         var TestModel = global.App.getModel('TestModel');
         $scope.clientData = false;
 
-        console.log(TestModel.testData());
         TestModel.getClientInfo(function (clientData) {
             $scope.clientData = clientData;
             _update();
@@ -122,6 +121,137 @@
     });
 })(Function('return this')());
 
+(function (global) {
+
+    global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
+        $scope.result = [];
+
+    });
+
+})(Function('return this')());
+
+
+(function (global) {
+
+    global.App.Controller('cmd-console-list', './components/cmd-console/', function ($scope, _update) {
+        $scope.getInput('list');
+        console.log($scope.list);
+    });
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('cmd-console', './components/cmd-console/', function ($scope, _update) {
+            var TestModel = global.App.getModel('TestModel');
+            $scope.source = TestModel.testData();
+            $scope.result = null;
+            $scope.validateCommand = false;
+
+            console.log('cmd-console', $scope.source);
+
+            $scope.processCommand = function () {
+                console.log('cmd-console:processCommand', this.name, this.type, this.value);
+                var vc = validateCommand(this.value);
+                processResult(vc.command, vc.value);
+                _update();
+            };
+
+            function validateCommand(rawCommand) {
+                var v = '', c = '', parts, sharpCommand = ['about', 'help', 'author'];
+                if (rawCommand.indexOf(':') > 0) {
+                    parts = rawCommand.split(':');
+                    c = parts[0];
+                    v = parts[1];
+                } else if (rawCommand.indexOf('#') === 0) {
+                    parts = rawCommand.split('#');
+                    c = '#';
+                    v = parts[1];
+                }
+                console.log('console-console:validateCommand', rawCommand, c, v);
+                switch (c) {
+                    case '#':
+                        if (sharpCommand.indexOf(v) === -1) {
+                            console.log('console-console:validateCommand [' + v + '] command does not exists in: ', sharpCommand);
+                            $scope.validateCommand = 'This command does not exist';
+                        }
+                        break;
+                    default:
+                        if (['level'].indexOf(c) > -1) {
+                            c = 'callback';
+                        }
+                        if ($scope.source.array.indexOf(c) === -1) {
+                            console.log('console-console:validateCommand [' + c + ':' + v + '] command does not exists in: ', $scope.source.array);
+                            $scope.validateCommand = 'Please put another command';
+                        }
+                }
+                return {command: c, value: v};
+            }
+
+            function processResult(command, value) {
+                if (!$scope.validateCommand) {
+                    if (command === '#') {
+                        $scope.result = processSharpCommand(value);
+                    } else {
+                        $scope.result = processColonCommand(command, value);
+                    }
+                    _update();
+                    console.log('cmd-console:processResult', command, value, $scope.source, $scope.result);
+                }
+            }
+
+            function processSharpCommand(command) {
+                switch (command) {
+                    case 'about':
+                        return 'Description for about!';
+                    case 'help':
+                        return 'Do you need help ?';
+                    case 'author':
+                        return 'Rexhina Prifti';
+                    default:
+                        return 'This command does not exist!';
+                }
+
+            }
+
+            function processColonCommand(command, value) {
+                return processColon(command, value, $scope.source);
+            }
+
+            function processColon(key, value, source) {
+                if (!source) return [];
+                var result = [];
+
+                if (checkRegExp(value) && new RegExp(value).test(source[key])) {
+                    result.push(source);
+                } else if (source[key] === castValue(key, value)) {
+                    result.push(source);
+                }
+                return result.concat(processColon(key, value, source.object));
+            }
+
+            function castValue(type, value) {
+                switch (type) {
+                    case 'boolean':
+                        return value === 'false' ? false : true;
+                    default:
+                        return value;
+                }
+            }
+
+            function checkRegExp(value) {
+                var isValid = true;
+                try {
+                    new RegExp(value);
+                } catch (e) {
+                    console.error(e);
+                    isValid = false;
+                }
+                return isValid;
+            }
+        }
+    );
+
+})(Function('return this')());
 (function (global) {
 
     global.App.Controller('github-results', './components/github/', function ($scope, _update) {
