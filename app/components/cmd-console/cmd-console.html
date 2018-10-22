@@ -1,0 +1,7 @@
+<div>
+    cmd-console
+    <input type="text" name="command" placeholder="Command ..." bind-events="focusout: processCommand()">
+    <div bind-if="validateCommand" bind-value="validateCommand">
+        <div bind-if="result" controller="cmd-console-list" input="list: result"></div>
+    </div>
+
