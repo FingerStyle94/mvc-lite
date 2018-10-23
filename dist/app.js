@@ -33,6 +33,13 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
+(function (global) {
+
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -58,6 +65,8 @@
 (function (global) {
 
     global.App.Model('TestModel', function (setData) {
+        /** Creating  a function (this.testData) which will include some elements inside of an object */
+
         this.testData = function (level) {
             level = level || 0;
             level++;
@@ -86,7 +95,7 @@
 
         function gciTest() {
             console.log('TestModel:gciTest');
-            return 'rehims';
+            return 'rexhina';
         }
 
 
@@ -94,13 +103,6 @@
 
 })(Function('return this')());
 
-(function (global) {
-
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
 (function (global) {
 
     global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
@@ -124,19 +126,18 @@
 (function (global) {
 
     global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
-        $scope.result = [];
-
+        $scope.getInput('item');
+        console.log($scope.item);
+        /** Getting the input items from the source*/
     });
-
 })(Function('return this')());
-
-
 (function (global) {
 
     global.App.Controller('cmd-console-list', './components/cmd-console/', function ($scope, _update) {
         $scope.getInput('list');
-        console.log($scope.list);
+        console.log('cmd-console-list',$scope.list);
     });
+    /** Getting the input list  of the items in the source*/
 })(Function('return this')());
 
 (function (global) {
@@ -149,12 +150,16 @@
 
             console.log('cmd-console', $scope.source);
 
+            /** Command processing is a function that will then include the command validation function which will validate commands that are either # or with: depending on the command */
+
             $scope.processCommand = function () {
                 console.log('cmd-console:processCommand', this.name, this.type, this.value);
                 var vc = validateCommand(this.value);
                 processResult(vc.command, vc.value);
                 _update();
             };
+
+            /** Validating command will catch the command in two parts, separating in too variables the command and value*/
 
             function validateCommand(rawCommand) {
                 var v = '', c = '', parts, sharpCommand = ['about', 'help', 'author'];
@@ -187,6 +192,9 @@
                 return {command: c, value: v};
             }
 
+
+            /** Processing results will include two sub-functions of processing two types of commands */
+
             function processResult(command, value) {
                 if (!$scope.validateCommand) {
                     if (command === '#') {
@@ -199,6 +207,7 @@
                 }
             }
 
+            /** Processing the sharpCommand  of (# commands) */
             function processSharpCommand(command) {
                 switch (command) {
                     case 'about':
@@ -213,6 +222,7 @@
 
             }
 
+            /** Processing the colonCommand  of (: commands)*/
             function processColonCommand(command, value) {
                 return processColon(command, value, $scope.source);
             }
@@ -229,6 +239,7 @@
                 return result.concat(processColon(key, value, source.object));
             }
 
+            /** Processing the value with castValue parameter */
             function castValue(type, value) {
                 switch (type) {
                     case 'boolean':
@@ -237,6 +248,8 @@
                         return value;
                 }
             }
+
+            /** Creating a function for checking  if the value is a RegExp*/
 
             function checkRegExp(value) {
                 var isValid = true;

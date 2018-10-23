@@ -1,13 +1,10 @@
 <div>
     <span>cmd-console-list</span>
-    <div controller="cmd-console-item"></div>
     <div>
         <ul>
-            <li>
-                <span bind-value="list"></span>
-                <span bind-value="list:"></span>
+            <li bind-for="i in list">
+                <div controller="cmd-console-item" input="item: i"></div>
             </li>
         </ul>
     </div>
-
 </div>

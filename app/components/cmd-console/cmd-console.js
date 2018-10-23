@@ -8,12 +8,16 @@
 
             console.log('cmd-console', $scope.source);
 
+            /** Command processing is a function that will then include the command validation function which will validate commands that are either # or with: depending on the command */
+
             $scope.processCommand = function () {
                 console.log('cmd-console:processCommand', this.name, this.type, this.value);
                 var vc = validateCommand(this.value);
                 processResult(vc.command, vc.value);
                 _update();
             };
+
+            /** Validating command will catch the command in two parts, separating in too variables the command and value*/
 
             function validateCommand(rawCommand) {
                 var v = '', c = '', parts, sharpCommand = ['about', 'help', 'author'];
@@ -46,6 +50,9 @@
                 return {command: c, value: v};
             }
 
+
+            /** Processing results will include two sub-functions of processing two types of commands */
+
             function processResult(command, value) {
                 if (!$scope.validateCommand) {
                     if (command === '#') {
@@ -58,6 +65,7 @@
                 }
             }
 
+            /** Processing the sharpCommand  of (# commands) */
             function processSharpCommand(command) {
                 switch (command) {
                     case 'about':
@@ -72,6 +80,7 @@
 
             }
 
+            /** Processing the colonCommand  of (: commands)*/
             function processColonCommand(command, value) {
                 return processColon(command, value, $scope.source);
             }
@@ -88,6 +97,7 @@
                 return result.concat(processColon(key, value, source.object));
             }
 
+            /** Processing the value with castValue parameter */
             function castValue(type, value) {
                 switch (type) {
                     case 'boolean':
@@ -96,6 +106,8 @@
                         return value;
                 }
             }
+
+            /** Creating a function for checking  if the value is a RegExp*/
 
             function checkRegExp(value) {
                 var isValid = true;

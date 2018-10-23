@@ -1,6 +1,8 @@
 (function (global) {
 
     global.App.Model('TestModel', function (setData) {
+        /** Creating  a function (this.testData) which will include some elements inside of an object */
+
         this.testData = function (level) {
             level = level || 0;
             level++;
@@ -29,7 +31,7 @@
 
         function gciTest() {
             console.log('TestModel:gciTest');
-            return 'rehims';
+            return 'rexhina';
         }
 
 
