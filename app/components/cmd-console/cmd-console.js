@@ -51,7 +51,7 @@
             }
 
 
-            /** Processing results will include two sub-functions of processing two types of commands */
+            /** Processing results will include two sub-functions of processing two types of commands. */
 
             function processResult(command, value) {
                 if (!$scope.validateCommand) {
