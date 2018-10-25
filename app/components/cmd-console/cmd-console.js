@@ -66,6 +66,7 @@
             }
 
             /** Processing the sharpCommand  of (# commands) */
+
             function processSharpCommand(command) {
                 switch (command) {
                     case 'about':
