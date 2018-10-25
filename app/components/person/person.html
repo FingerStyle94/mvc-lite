@@ -1,0 +1,17 @@
+<div>
+    Person Component
+    <hr/>
+    <span bind-value="fullNameLabel"></span>
+    <span bind-value="fullName"></span>
+    <br/>
+    <span bind-value="'Age: '"></span>
+    <span bind-value="age"></span>
+    <br/>
+    <br/>
+    <input type="text" id="firstName" name="firstName" placeholder="First Name" bind-events="focusout: inputFocusout()">
+    <input type="text" name="lastName" placeholder="Last Name" bind-events="focusout: inputFocusout()">
+    <input type="text" name="birthday" placeholder="Birthday" bind-events="focusout: inputFocusout()">
+    <br/>
+    <button bind-events="click: calculateResult()">Calculate</button>
+    <!-- This is the view of the person component which return the values that we want to have back//-->
+</div>
