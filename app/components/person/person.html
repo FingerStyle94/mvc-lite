@@ -1,16 +1,33 @@
 <div>
     Person Component
     <hr/>
-    <span bind-value="fullNameLabel"></span>
-    <span bind-value="fullName"></span>
+    <b><span style="color:blue; font-size: 16pt" bind-value="fullNameLabel"></span></b>
+    <i><span style="font-size: 15pt" bind-value="fullName"></span></i>
     <br/>
-    <span bind-value="'Age: '"></span>
-    <span bind-value="age"></span>
+    <b><span style="color:red; font-size: 16pt" bind-value="'Age: '"></span></b>
+    <i><span style="font-size: 15pt" bind-value="age"></span></i>
+    <br/>
+    <b><span style="color:green;font-size: 16pt" bind-value="'Profession: '"></span></b>
+    <i> <span style="font-size: 15pt" bind-value="profession"></span></i>
+    <br/>
+    <b><span style="color:purple;font-size: 16pt" bind-value="'Bmi: '"></span></b>
+    <i> <span style="font-size: 15pt" bind-value="BMI"></span></i>
+    <br/>
+    <b><span style="color:#804d39;font-size: 16pt" bind-value="'ChildWeight: '"></span></b>
+    <i> <span style="font-size: 15pt" bind-value="childWeight"></span></i>
+    <br/>
+    <b><span style="color:#545480;font-size: 16pt" bind-value="'ChildHeight: '"></span></b>
+    <i> <span style="font-size: 15pt" bind-value="childHeight"></span></i>
     <br/>
     <br/>
     <input type="text" id="firstName" name="firstName" placeholder="First Name" bind-events="focusout: inputFocusout()">
     <input type="text" name="lastName" placeholder="Last Name" bind-events="focusout: inputFocusout()">
     <input type="text" name="birthday" placeholder="Birthday" bind-events="focusout: inputFocusout()">
+    <input type="text" name="profession" placeholder="Profession" bind-events="focusout: inputFocusout()">
+    <input type="text" name="weight" placeholder="Weight" bind-events="focusout: inputFocusout()">
+    <input type="text" name="height" placeholder="Height" bind-events="focusout: inputFocusout()">
+    <input type="text" name="month " placeholder="Month" bind-events="focusout: inputFocusout()">
+    <br/>
     <br/>
     <button bind-events="click: calculateResult()">Calculate</button>
     <!-- This is the view of the person component which return the values that we want to have back//-->

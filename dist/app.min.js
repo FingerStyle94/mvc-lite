@@ -22,17 +22,6 @@
 })(Function('return this')());
 (function (global) {
 
-    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
-        $scope.title = "Main Layout";
-
-        $scope.buttonClicked = function (pageName) {
-            global.App.Router().navigateTo(pageName);
-        };
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -58,15 +47,42 @@
 (function (global) {
 
     global.App.Model('PersonModel', function (setData) {
+        /** Creating  the PersonModel which will control the person component*/
 
         this.getPersonFullName = function (firstName, lastName) {
             return firstName + ' ' + lastName + ' ' + ' ';
         };
         this.getPersonAge = function (birthday) {
-            let diff_ms = Date.now() - birthday.getTime();
-            let age_dt = new Date(diff_ms);
+            var diff_ms = Date.now() - birthday.getTime();
+            var age_dt = new Date(diff_ms);
             return Math.abs(age_dt.getUTCFullYear() - 1970);
-
+        };
+        this.getPersonProfession = function (profession) {
+            return profession;
+        };
+        this.getPersonBMI = function (weight, height) {
+            height *= 12;
+            var BMI = (weight / (height * height)) * 703;
+            return Math.round(BMI * Math.pow(10, 2)) / Math.pow(10, 2);
+        };
+        this.getBabyInfo = function (month) {
+            var childWeight, childHeight;
+            if (month === 'month1') {
+                childWeight = '3.3 - 5kg';
+                childHeight = '48-58 cm';
+            } else if (month === 'month2') {
+                childWeight = '4-6 kg';
+                childHeight = '53-60 cm';
+            }
+            else if (month === 'month3') {
+                childWeight = '4.5-7 kg';
+                childHeight = '57-65 cm';
+            }
+            else if (month === 'month4') {
+                childWeight = '5.5-8 kg';
+                childHeight = '59-66 cm';
+            }
+            return childHeight + childWeight;
         };
     });
 
@@ -115,31 +131,22 @@
 
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
+    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
+        $scope.title = "Main Layout";
+
+        $scope.buttonClicked = function (pageName) {
+            global.App.Router().navigateTo(pageName);
+        };
     });
 
 })(Function('return this')());
 (function (global) {
 
-    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
-        var TestModel = global.App.getModel('TestModel');
-        $scope.clientData = false;
-
-        TestModel.getClientInfo(function (clientData) {
-            $scope.clientData = clientData;
-            _update();
-        });
-
-        function handleCallback(clientData) {
-            console.log(clientData);
-        }
-
-
-        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
     });
-})(Function('return this')());
 
+})(Function('return this')());
 (function (global) {
 
     global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
@@ -285,16 +292,239 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
+        var TestModel = global.App.getModel('TestModel');
+        $scope.clientData = false;
+
+        TestModel.getClientInfo(function (clientData) {
+            $scope.clientData = clientData;
+            _update();
+        });
+
+        function handleCallback(clientData) {
+            console.log(clientData);
+        }
+
+
+        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
+    });
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('github-results', './components/github/', function ($scope, _update) {
+        $scope.getInput('data');
+        console.log($scope.data);
+    });
+
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('github', './components/github/', function ($scope, _update) {
+        var GitHub = global.App.getModel('GitHub');
+        $scope.entities = GitHub.entities;
+        $scope.gitHubData = false;
+        $scope.entity = false;
+        $scope.term = false;
+        $scope.message = '';
+        $scope.found = false;
+        $scope.even = false;
+
+
+        $scope.eventClicked = function () {
+            if ($scope.entity && $scope.term) {
+                GitHub.getGitHubData($scope.entity, {q: $scope.term}, function (gitHubData) {
+                    $scope.gitHubData = processResults(gitHubData);
+                    _update();
+                });
+            } else if (!$scope.entity) {
+                $scope.message = 'Please choose a entity';
+            } else if (!$scope.term) {
+                $scope.message = 'Please type a term to search';
+            } else {
+                $scope.message = 'Please choose types before click';
+            }
+            _update();
+        };
+
+        $scope.inputFocusout = function () {
+            console.log('github:inputFocusout', this.value);
+            $scope.term = this.value;
+            _update();
+        };
+
+        $scope.selectClicked = function (entity) {
+            console.log('github:selectClicked', entity);
+            $scope.entity = entity;
+            _update();
+        };
+
+        /**
+         Ne kete seksion kemi  shfaqjen e te dhenave qe ne duam perkatesisht per entitetet users dhe repositories prandaj  do kontrollohen  me ane te nje indeksi [i] i cili do kape te dhenat qe duam nga results.
+         */
+
+        function processResults(results) {
+            var data = [], k, sr, st, ok, up, str = 'rexhinaIdobet';
+            console.log('github:processResults', results);
+            for (var i in results.items) {
+                if ($scope.entity === 'users') {
+                    data.push({
+                        id: results.items[i].id,
+                        score: results.items[i].score,
+                        login: results.items[i].login,
+                        html_url: results.items[i].html_url
+                    });
+
+
+                } else if ($scope.entity === 'repositories') {
+                    data.push({
+                        score: results.items[i].score,
+                        id: results.items[i].id,
+                        name: results.items[i].name,
+                        forks: results.items[i].forks
+                    });
+                }
+                $scope.resultArrayOfObject = [$scope.entity, $scope.term];
+                console.log($scope.resultArrayOfObject);
+                /**
+                 Ne kete seksion provojme funksionin parseInt te string
+                 */
+                parseInt = function () {
+                    var I = 'rexhinaIdobet';
+                    console.log(I.parseInt);
+                };
+
+                /**
+                 Ne kete seksion provojme medoden  charCodeAt() e cila kthen unicode te karakterit ne nje index specifik
+                 */
+                k = str.charCodeAt(3);
+                console.log(k);
+                /**
+                 Ne kete seksion provojme medoden split() e cila ndan stringun
+                 */
+                st = str.split("");
+                console.log(st);
+                /**
+                 Ne kete seksion provojme medoden substr() e cila ndan stringun duke filuar nga filimi deri ne poz qe duam
+                 */
+                sr = str.substr(7);
+                console.log(sr);
+                /**
+                 Ne kete seksion provojme medoden substring() e cila ndan stringun nga nje poz ne nje tjeter
+                 */
+                ok = str.substring(4, 7);
+                console.log(ok);
+                /**
+                 Ne kete seksion provojme medoden  toUpperCase() e cila kthen stringun ne tip upercase
+                 */
+                up = str.toUpperCase();
+                console.log(up);
+                /**
+                 Ne kete seksion provojme medoden   valueOf() e cila kthen vleren primitive te objektit string
+                 */
+
+                /**
+                 Ne kete seksion provojme includes ne array
+                 */
+                console.log(data.includes('netmask'));
+
+                /**
+                 Ne kete seksion kemi shfaqjen e te dhenave per userin rexhinaIdobet
+                 */
+
+                $scope.found = data.find(function (element) {
+                    return element.login === "rexhinaIdobet";
+                });
+
+                console.log($scope.found);
+            }
+            /**
+             Ne kete seksion provojme sort ne array
+             */
+            data.sort(function (a, b) {
+                return b.id - a.id;
+            });
+            console.log(data.length);
+            /**
+             Ne kete seksion provojme arrayfilter.
+             */
+
+
+            /**const result = data.filter(data => data.name === 'rexhinaIdobet');
+             console.log(result);*/
+            /**
+             Ne kete seksion na shfaq tre te dhenat e para per cdo user..
+             */
+
+            console.log(data.slice(2));
+            /**
+             Ne kete seksion ......
+             */
+            $scope.even = function (element) {
+                return element.score === 26.686699;
+            };
+
+            var extra = {}, group, info = [];
+            for (var i in results.items) {
+                if ($scope.entity === 'repositories') {
+                    group = results.items[i].owner.login;
+                    if (!extra[group]) {
+                        extra[group] = [];
+                    }
+                    extra[group].push(results.items[i].name);
+                }
+                if (results.items[i].login === 'rexhinaIdobet') {
+                    info.push({
+                        score: results.items[i].score,
+                        html_url: results.items[i].html_url
+                    });
+                }
+            }
+            console.log('results', extra, results.items, info);
+            //data = results.items;
+            return {
+
+                extra: extra,
+                data: data,
+                type: $scope.entity,
+                term: $scope.term,
+                info: info,
+                str: str,
+                k: k,
+                sr: sr,
+                ok: ok,
+                up: up,
+                st: st
+            };
+
+
+        }
+
+
+    });
+})(Function('return this')());
+
+(function (global) {
+
     global.App.Controller('person', './components/person/', function ($scope, _update) {
         var PersonModel = global.App.getModel('PersonModel');
-
+        /** Creating  the Person controller which will control the person view*/
         $scope.fullNameLabel = 'Full Name: ';
         $scope.fullName = null;
         $scope.age = null;
+        $scope.proffesion = null;
+        $scope.BMI = null;
+        $scope.childWeight = null;
+        $scope.childHeight = null;
+        $scope.month = null;
 
+        $scope.height = 0;
+        $scope.weight = 0;
         $scope.firstName = '';
         $scope.lastName = '';
         $scope.birthday = '';
+        $scope.profession = '';
 
         $scope.inputFocusout = function () {
             switch (this.name) {
@@ -303,20 +533,34 @@
                     this.size = 40;
                     break;
                 case 'lastName':
+                    this.bold = '';
                     $scope.lastName = this.value;
                     break;
                 case 'birthday':
                     $scope.birthday = this.value;
-                    this.disabled = true;
                     break;
+                case 'profession':
+                    $scope.profession = this.value;
+                    break;
+                case 'height':
+                    $scope.height = this.value;
+                    break;
+                case 'month':
+                    $scope.month = this.value;
+                    break;
+
+
             }
-            console.log('person:inputFocusout', this.name, this.value);
+            console.log('person:inputFocusout', this.name, this.value, this.size, this.bold);
             _update();
         };
         $scope.calculateResult = function () {
             $scope.fullName = PersonModel.getPersonFullName($scope.firstName, $scope.lastName);
             var parts = $scope.birthday.split(',');
             $scope.age = PersonModel.getPersonAge(new Date(parts[0], parts[1], parts[2]));
+            $scope.proffesion = PersonModel.getPersonProfession($scope.profession);
+            $scope.BMI = PersonModel.getPersonBMI($scope.weight, $scope.height);
+            $scope.month = PersonModel.getBabyInfo($scope.childWeight, $scope.childHeight, $scope.month);
             _update();
         }
     });
@@ -522,198 +766,4 @@
 
     });
 
-})(Function('return this')());
-(function (global) {
-
-    global.App.Controller('github-results', './components/github/', function ($scope, _update) {
-        $scope.getInput('data');
-        console.log($scope.data);
-    });
-
-})(Function('return this')());
-
-(function (global) {
-
-    global.App.Controller('github', './components/github/', function ($scope, _update) {
-        var GitHub = global.App.getModel('GitHub');
-        $scope.entities = GitHub.entities;
-        $scope.gitHubData = false;
-        $scope.entity = false;
-        $scope.term = false;
-        $scope.message = '';
-        $scope.found = false;
-        $scope.even = false;
-
-
-        $scope.eventClicked = function () {
-            if ($scope.entity && $scope.term) {
-                GitHub.getGitHubData($scope.entity, {q: $scope.term}, function (gitHubData) {
-                    $scope.gitHubData = processResults(gitHubData);
-                    _update();
-                });
-            } else if (!$scope.entity) {
-                $scope.message = 'Please choose a entity';
-            } else if (!$scope.term) {
-                $scope.message = 'Please type a term to search';
-            } else {
-                $scope.message = 'Please choose types before click';
-            }
-            _update();
-        };
-
-        $scope.inputFocusout = function () {
-            console.log('github:inputFocusout', this.value);
-            $scope.term = this.value;
-            _update();
-        };
-
-        $scope.selectClicked = function (entity) {
-            console.log('github:selectClicked', entity);
-            $scope.entity = entity;
-            _update();
-        };
-
-        /**
-         Ne kete seksion kemi  shfaqjen e te dhenave qe ne duam perkatesisht per entitetet users dhe repositories prandaj  do kontrollohen  me ane te nje indeksi [i] i cili do kape te dhenat qe duam nga results.
-         */
-
-        function processResults(results) {
-            var data = [], k, sr, st, ok, up, str = 'rexhinaIdobet';
-            console.log('github:processResults', results);
-            for (var i in results.items) {
-                if ($scope.entity === 'users') {
-                    data.push({
-                        id: results.items[i].id,
-                        score: results.items[i].score,
-                        login: results.items[i].login,
-                        html_url: results.items[i].html_url
-                    });
-
-
-                } else if ($scope.entity === 'repositories') {
-                    data.push({
-                        score: results.items[i].score,
-                        id: results.items[i].id,
-                        name: results.items[i].name,
-                        forks: results.items[i].forks
-                    });
-                }
-                $scope.resultArrayOfObject = [$scope.entity, $scope.term];
-                console.log($scope.resultArrayOfObject);
-                /**
-                 Ne kete seksion provojme funksionin parseInt te string
-                 */
-                parseInt = function () {
-                    var I = 'rexhinaIdobet';
-                    console.log(I.parseInt);
-                };
-
-                /**
-                 Ne kete seksion provojme medoden  charCodeAt() e cila kthen unicode te karakterit ne nje index specifik
-                 */
-                k = str.charCodeAt(3);
-                console.log(k);
-                /**
-                 Ne kete seksion provojme medoden split() e cila ndan stringun
-                 */
-                st = str.split("");
-                console.log(st);
-                /**
-                 Ne kete seksion provojme medoden substr() e cila ndan stringun duke filuar nga filimi deri ne poz qe duam
-                 */
-                sr = str.substr(7);
-                console.log(sr);
-                /**
-                 Ne kete seksion provojme medoden substring() e cila ndan stringun nga nje poz ne nje tjeter
-                 */
-                ok = str.substring(4, 7);
-                console.log(ok);
-                /**
-                 Ne kete seksion provojme medoden  toUpperCase() e cila kthen stringun ne tip upercase
-                 */
-                up = str.toUpperCase();
-                console.log(up);
-                /**
-                 Ne kete seksion provojme medoden   valueOf() e cila kthen vleren primitive te objektit string
-                 */
-
-                /**
-                 Ne kete seksion provojme includes ne array
-                 */
-                console.log(data.includes('netmask'));
-
-                /**
-                 Ne kete seksion kemi shfaqjen e te dhenave per userin rexhinaIdobet
-                 */
-
-                $scope.found = data.find(function (element) {
-                    return element.login === "rexhinaIdobet";
-                });
-
-                console.log($scope.found);
-            }
-            /**
-             Ne kete seksion provojme sort ne array
-             */
-            data.sort(function (a, b) {
-                return b.id - a.id;
-            });
-            console.log(data.length);
-            /**
-             Ne kete seksion provojme arrayfilter.
-             */
-
-
-            /**const result = data.filter(data => data.name === 'rexhinaIdobet');
-             console.log(result);*/
-            /**
-             Ne kete seksion na shfaq tre te dhenat e para per cdo user..
-             */
-
-            console.log(data.slice(2));
-            /**
-             Ne kete seksion ......
-             */
-            $scope.even = function (element) {
-                return element.score === 26.686699;
-            };
-
-            var extra = {}, group, info = [];
-            for (var i in results.items) {
-                if ($scope.entity === 'repositories') {
-                    group = results.items[i].owner.login;
-                    if (!extra[group]) {
-                        extra[group] = [];
-                    }
-                    extra[group].push(results.items[i].name);
-                }
-                if (results.items[i].login === 'rexhinaIdobet') {
-                    info.push({
-                        score: results.items[i].score,
-                        html_url: results.items[i].html_url
-                    });
-                }
-            }
-            console.log('results', extra, results.items, info);
-            //data = results.items;
-            return {
-
-                extra: extra,
-                data: data,
-                type: $scope.entity,
-                term: $scope.term,
-                info: info,
-                str: str,
-                k: k,
-                sr: sr,
-                ok: ok,
-                up: up,
-                st: st
-            };
-
-
-        }
-
-
-    });
 })(Function('return this')());
