@@ -22,6 +22,24 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
+(function (global) {
+
+    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
+        $scope.title = "Main Layout";
+
+        $scope.buttonClicked = function (pageName) {
+            global.App.Router().navigateTo(pageName);
+        };
+    });
+
+})(Function('return this')());
+(function (global) {
+
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -131,22 +149,24 @@
 
 (function (global) {
 
-    global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
-        $scope.title = "Main Layout";
+    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
+        var TestModel = global.App.getModel('TestModel');
+        $scope.clientData = false;
 
-        $scope.buttonClicked = function (pageName) {
-            global.App.Router().navigateTo(pageName);
-        };
+        TestModel.getClientInfo(function (clientData) {
+            $scope.clientData = clientData;
+            _update();
+        });
+
+        function handleCallback(clientData) {
+            console.log(clientData);
+        }
+
+
+        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
     });
-
 })(Function('return this')());
-(function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
 (function (global) {
 
     global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
@@ -290,26 +310,6 @@
     );
 
 })(Function('return this')());
-(function (global) {
-
-    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
-        var TestModel = global.App.getModel('TestModel');
-        $scope.clientData = false;
-
-        TestModel.getClientInfo(function (clientData) {
-            $scope.clientData = clientData;
-            _update();
-        });
-
-        function handleCallback(clientData) {
-            console.log(clientData);
-        }
-
-
-        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
-    });
-})(Function('return this')());
-
 (function (global) {
 
     global.App.Controller('github-results', './components/github/', function ($scope, _update) {
