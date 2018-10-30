@@ -13,5 +13,5 @@
         </br>
         <button bind-events="click: eventClicked()">Search</button>
     </div>
-    <div bind-if="gitHubData"  controller="github-results"></div>
+    <div bind-if="gitHubData"  controller="github-results" input="data: gitHubData"</div>
 </div>
