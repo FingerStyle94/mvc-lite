@@ -7,16 +7,16 @@
             var xhr = new XMLHttpRequest(),
                 options = data.options || {};
 
+
+
+            url += getParamString((data.clean ? {} : permaParams), data.params);
+
+            xhr.open('GET', url, true);
             if (typeof data.headers === 'object') {
                 for (var header in data.headers) if (data.headers.hasOwnProperty(header)) {
                     xhr.setRequestHeader(header, data.headers[header]);
                 }
             }
-
-            url += getParamString((data.clean ? {} : permaParams), data.params);
-
-            xhr.open('GET', url, true);
-
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200)

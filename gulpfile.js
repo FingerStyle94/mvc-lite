@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
 
 var LibraryConfig = {
     SOURCE: [
@@ -28,6 +29,12 @@ var AppConfig = {
 
 var DEST_PATH = "./dist/";
 
+var themePath = './app/style/';
+var SassConfig = {
+    SOURCE: [
+        themePath + '**/*.scss'
+    ]
+};
 gulp.task('compile-mvc', function () {
     return gulp.src(LibraryConfig.SOURCE)
         .pipe(concat(LibraryConfig.DEST_NAME + '.js'))
@@ -45,7 +52,15 @@ gulp.task('compile-app', function () {
         .pipe(gulp.dest(DEST_PATH));
 });
 
+gulp.task('sass', function () {
+    return gulp.src(SassConfig.SOURCE)
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(rename('main.css'))
+        .pipe(gulp.dest(DEST_PATH));
+});
+
 gulp.task('watch', function () {
     gulp.watch('js/**/*.js', ['compile-mvc']);
     gulp.watch('app/**/*.js', ['compile-app']);
+    gulp.watch('app/style/**/*.scss', ['sass']);
 });

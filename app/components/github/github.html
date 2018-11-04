@@ -1,17 +1,19 @@
 <div>
     <div>
         <hr/>
-        <span>github</span>
+        <span class="title">Git-Hub</span>
         </br>
         </br>
-        <input type="text" name="search" placeholder="Search for.."  bind-events="focusout: inputFocusout()">
+        <input type="text" name="search" placeholder="Search for.." bind-events="focusout: inputFocusout()">
         </br>
         </br>
-        <ul><li bind-for="e in entities" value="e" bind-value="e" bind-events="click: selectClicked(e)"></li></ul>
+        <ul>
+            <li bind-for="e in entities" value="e" bind-value="e" bind-events="click: selectClicked(e)"></li>
+        </ul>
         </br>
         <span bind-value="message"></span>
         </br>
-        <button bind-events="click: eventClicked()">Search</button>
+        <button class="search" bind-events="click: eventClicked()">Search</button>
     </div>
-    <div bind-if="gitHubData"  controller="github-results" input="data: gitHubData"</div>
+    <div bind-if="gitHubData" controller="github-results" input="data: gitHubData"></div>
 </div>

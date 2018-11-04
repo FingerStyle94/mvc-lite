@@ -22,13 +22,6 @@
 })(Function('return this')());
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Controller('main-layout', '/main-layout/', function ($scope, _update) {
         $scope.title = "Main Layout";
 
@@ -149,24 +142,35 @@
 
 (function (global) {
 
-    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
-        var TestModel = global.App.getModel('TestModel');
-        $scope.clientData = false;
+    global.App.Model('UserInfoModel', function (setData) {
+        this.entities = ['Netmask', 'Hostname', 'ASN', 'City', 'Country', 'Latitude', 'Longitude', 'CountryCode'];
 
-        TestModel.getClientInfo(function (clientData) {
-            $scope.clientData = clientData;
-            _update();
-        });
+        this.getUserInfo = function (callback) {
+            console.log(callback);
+            /** On that part we make exactly a change on the header and options of Http format in order to make a connection of .txt, not only .json */
 
-        function handleCallback(clientData) {
-            console.log(clientData);
-        }
+            global.Utils.Http.get('https://ip.nf/me.txt', {
+                options: {plainText: true},
+                headers: {"Content-Type": "text/plain"}
+            }, function (response) {
 
+                console.log('UserInfoModel:getUserInfo', response);
+                callback(response.ip);
+                setData(response.ip);
+            });
+        };
 
-        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
     });
+
 })(Function('return this')());
 
+(function (global) {
+
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
 (function (global) {
 
     global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
@@ -310,6 +314,26 @@
     );
 
 })(Function('return this')());
+(function (global) {
+
+    global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
+        var TestModel = global.App.getModel('TestModel');
+        $scope.clientData = false;
+
+        TestModel.getClientInfo(function (clientData) {
+            $scope.clientData = clientData;
+            _update();
+        });
+
+        function handleCallback(clientData) {
+            console.log(clientData);
+        }
+
+
+        console.log('client-info', TestModel.getClientInfo(handleCallback), TestModel.prova());
+    });
+})(Function('return this')());
+
 (function (global) {
 
     global.App.Controller('github-results', './components/github/', function ($scope, _update) {
@@ -568,6 +592,71 @@
 
 (function (global) {
 
+    global.App.Controller('user-info-results', './components/user-info/', function ($scope, _update) {
+        $scope.getInput('info');
+        console.log($scope.info);
+    });
+
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('user-info', './components/user-info/', function ($scope, _update) {
+        var UserInfoModel = global.App.getModel('UserInfoModel');
+        $scope.userInfo = false;
+        $scope.entities = UserInfoModel.entities;
+        $scope.entity = false;
+        $scope.value = false;
+        $scope.message = '';
+        $scope.term = false;
+
+
+        UserInfoModel.getUserInfo(function (userInfo) {
+            $scope.userInfo = {
+                ASN: 'AS35444 ADA Holding - ADA AIR sh.p.k.',
+                Netmask: 22,
+                Hostname: 'ip-185-158-3-189.digicom-al.net.',
+                City: 'Tirane',
+                Country: 'Albania',
+                Latitude: '41.32749939',
+                Longitude: '19.81889915',
+                CountryCode: 'AL'
+            };
+            _update();
+        });
+
+        $scope.eventClicked = function () {
+            if ($scope.entities) {
+                UserInfoModel.getUserInfo(function (userInfo) {
+                    $scope.userInfo = processResults(userInfo);
+                    _update();
+                });
+            }
+            else if ($scope.entity === 'ASN') {
+                $scope.info = processResults(info);
+            }
+            console.log('user-info',);
+        };
+
+        $scope.inputFocusout = function () {
+            console.log('user-info:inputFocusout', this.value);
+            $scope.entity = this.value;
+            _update();
+        };
+
+        function processResults() {
+            var info = ["Asn:\n AS35444 ADA Holding - ADA AIR sh.p.k."];
+            if ($scope.entity === 'ASN') {
+                return info.split("\n");
+            }
+            console.log('Results', info);
+
+        }
+    });
+})(Function('return this')());
+
+(function (global) {
+
     global.App.Controller('provafinale', './components/test/', function ($scope, _update) {
         $scope.getInput('provaBoolean');
         $scope.getInput('inputArray');
@@ -646,7 +735,7 @@
     global.App.Controller('test-type-input', './components/test/', function ($scope, _update) {
         $scope.inputValueEmpty = null;
         $scope.inputValueBoolean = true;
-        $scope.inputValueNumber = 9;
+        $scope.inputValueNumber = 6;
         $scope.inputValueString = 'rexhina';
         console.log('test-type-input:primitive', $scope.inputValueEmpty, $scope.inputValueBoolean, $scope.inputValueNumber, $scope.inputValueString);
         $scope.inputValueObject = {
