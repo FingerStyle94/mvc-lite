@@ -21,7 +21,7 @@ textarea {
 }
 
 p {
-  background: #804d39
+  color: $themes-bg;
 }
 
 span.title {
@@ -32,6 +32,7 @@ span.title {
 
 button.search {
   color: $themes-bg-primary;
+  border: $themes-border;
 }
 
 span.element {
@@ -46,5 +47,11 @@ input.place {
 }
 
 button.return {
-  color: #006064
+  color: #006064;
+  box-sizing: border-box;
+}
+
+span.txt {
+  color: #AD1457;
+  font-family: $themes-ff;
 }

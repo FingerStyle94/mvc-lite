@@ -1,0 +1,15 @@
+<div>
+    <div>
+        <hr/>
+        <span class="title">User-Info</span>
+        <input class="place" type="text" name="search" placeholder="Search for.."
+               bind-events="focusout: inputFocusout()">
+        <br/>
+        <br/>
+        <button class="return" bind-events="click: eventClicked()">Return Value</button>
+        <br/>
+        <b><span class="txt" bind-value="message"></span></b>
+        <br/>
+    </div>
+    <div bind-if="userInfo" controller="user-info-results" input="info: userInfo"></div>
+</div>
