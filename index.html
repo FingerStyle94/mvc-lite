@@ -5,14 +5,16 @@
 
     <script src="./dist/mvc-lite.js"></script>
     <script src="./dist/app.js"></script>
+    <link rel="stylesheet" href="./dist/main.css">
 </head>
 <body>
-    <div controller="app"></div>
+<div controller="app"></div>
 
-    <script>
-        (function(global) {
-            global.App.Bootstrap('app');
-        })(Function('return this')());
-    </script>
+<script>
+    (function (global) {
+        global.App.Bootstrap('app');
+
+    })(Function('return this')());
+</script>
 </body>
 </html>

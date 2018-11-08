@@ -1,0 +1,72 @@
+<div>
+    <hr/>
+    <span class="title">Test-Type</span>
+    <button bind-events="click: eventClicked()">Result</button>
+    <hr/>
+    <span bind-value="'Primitive types result'"></span>
+    <br/>
+    <div>
+        <div bind-if="typeof resultEmptyAddOperator !== 'undefined'">
+            <span bind-value="'resultEmptyAddOperator:'"></span>
+            <span bind-value="resultEmptyAddOperator"></span>
+            &nbsp;<span bind-value="typeof resultEmptyAddOperator"></span>
+        </div>
+        <div bind-if="typeof resultNumberAddOperator !== 'undefined'">
+            <span bind-value="'resultNumberAddOperator:'"></span>
+            <span bind-value="resultNumberAddOperator"></span>
+            &nbsp;<span bind-value="typeof resultNumberAddOperator"></span>
+        </div>
+        <div bind-if="typeof resultAndBoolean !== 'undefined'">
+            <span bind-value="'resultAndBoolean:'"></span>
+            <span bind-value="resultAndBoolean"></span>
+            &nbsp;<span bind-value="typeof resultAndBoolean"></span>
+        </div>
+        <div bind-if="typeof resultStringAddOperator !== 'undefined'">
+            <span bind-value="'resultStringAddOperator:'"></span>
+            <span bind-value="resultStringAddOperator"></span>
+            &nbsp;<span bind-value="typeof resultStringAddOperator"></span>
+        </div>
+        <hr/>
+        <span bind-value="'Complex types result'"></span>
+        <br/>
+        <div bind-if="typeof resultArrayOfArray !== 'undefined'">
+            <span bind-value="'resultArrayOfArray:'"></span>
+            <span bind-value="resultArrayOfArray"></span>
+            &nbsp;<span bind-value="typeof resultArrayOfArray"></span>
+        </div>
+        <div bind-if="typeof resultArrayOfObject !== 'undefined'">
+            <span bind-value="'resultArrayOfObject:'"></span>
+            <span bind-value="resultArrayOfObject"></span>
+            &nbsp;<span bind-value="typeof resultArrayOfObject"></span>
+        </div>
+        <div bind-if="typeof resultArrayOfDate !=='undefined'">
+            <span bind-events="Date: resultArrayOfDate()"></span>
+            <span bind-value="resultArrayOfDate"></span>
+
+            <span bind-value="typeof resultArrayOfDate"></span>
+        </div>
+        <div bind-if="typeof resultCallFunction !=='undefined'">
+            <span bind-events="Call: resultCallFunction()"></span>
+            <span bind-value="resultCallFunction"></span>
+            <span bind-value="typeof resultCallFunction"></span>
+        </div>
+        <div bind-if="typeof resultArrayOfArray !=='undefined'">
+            <span bind-value="'resultArrayOfArray: '"></span>
+            <span bind-value="resultArrayOfArray"></span>
+            <span bind-value="typeof resultArrayOfArray"></span>
+        </div>
+        <div bind-if="typeof resultStringOfBoolean !=='undefined'">
+            <span bind-value="'resultStringOfBoolean: '"></span>
+            <span bind-value="resultStringOfBoolean"></span>
+            <span bind-value="typeof resultStringOfBoolean"></span>
+        </div>
+        <div bind-if="typeof resultNumberSubtractOperator !=='undefined'">
+            <span bind-value="'resultNumberSubtractOperator: '"></span>
+            <span bind-value="resultNumberSubtractOperator"></span>
+            <span bind-value="typeof resultNumberSubtractOperator"></span>
+        </div>
+        <div controller="provafinale"
+             input="provaBoolean: inputBoolean && definedBoolean, inputArray: inputArray, definedObject: definedObject, inputObject: inputObject, definedArray: definedArray">
+        </div>
+    </div>
+</div>
