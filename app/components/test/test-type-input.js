@@ -3,7 +3,7 @@
     global.App.Controller('test-type-input', './components/test/', function ($scope, _update) {
         $scope.inputValueEmpty = null;
         $scope.inputValueBoolean = true;
-        $scope.inputValueNumber = 9;
+        $scope.inputValueNumber = 6;
         $scope.inputValueString = 'rexhina';
         console.log('test-type-input:primitive', $scope.inputValueEmpty, $scope.inputValueBoolean, $scope.inputValueNumber, $scope.inputValueString);
         $scope.inputValueObject = {
