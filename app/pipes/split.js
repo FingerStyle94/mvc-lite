@@ -1,6 +1,6 @@
-(function(global) {
+(function (global) {
 
-    global.App.Pipe('split', function(value, data) {
+    global.App.Pipe('split', function (value, data) {
         return value.split(data);
     });
 

@@ -1,21 +1,21 @@
-(function(global) {
+(function (global) {
 
     var TAG = "[Injectable]";
 
-    var Injectable = function(name, options) {
+    var Injectable = function (name, options) {
         this.name = name;
 
         // Modifier function:
         try {
             this.modifier = options.modifier.bind(this);
-        } catch(err) {
+        } catch (err) {
             console.error(TAG, this.name + ": No modifier set.");
         }
 
         // Overriding prototype functions
-        if(typeof options.getter === 'function')
+        if (typeof options.getter === 'function')
             this.getter = options.getter.bind(this);
-        if(typeof options.compare === 'function')
+        if (typeof options.compare === 'function')
             this.compare = options.compare.bind(this);
 
         // Other options:
@@ -24,12 +24,12 @@
         this.useComponentInGetter = !!options.useComponentInGetter;
     };
 
-    Injectable.prototype.getter = function(statement, comp) {
+    Injectable.prototype.getter = function (statement, comp) {
         return comp.evalWithScope(statement);
     };
 
-    Injectable.prototype.compare = function(oldVal, newVal) {
-        if(oldVal === newVal)
+    Injectable.prototype.compare = function (oldVal, newVal) {
+        if (oldVal === newVal)
             return true;
     };
 

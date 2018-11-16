@@ -1,0 +1,57 @@
+<div>
+    <span class="title">Test-Type-Input</span>
+    <hr/>
+    <span bind-value="'Primitive types'"></span>
+    <br/>
+    <span bind-value="'inputValueEmpty: '"></span>
+    <span bind-value="inputValueEmpty"></span>
+    &nbsp;<span bind-value="typeof inputValueEmpty "></span>
+    <br/>
+    <span bind-value="'inputValueBoolean: '"></span>
+    <span bind-value="inputValueBoolean"></span>
+    &nbsp;<span bind-value="inputTypeOf(inputValueBoolean)"></span>
+    <br/>
+    <span bind-value="'inputValueNumber: '"></span>
+    <span bind-value="inputValueNumber"></span>
+    &nbsp;<span bind-value="inputTypeOf(inputValueNumber)"></span>
+    <br/>
+    <span bind-value="'inputValueString: '"></span>
+    <span bind-value="inputValueString"></span>
+    &nbsp;<span bind-value="inputTypeOf(inputValueString)"></span>
+    <br/>
+    <hr/>
+    <span bind-value="'Complex type'"></span>
+    <br/>
+    <span bind-value="'inputValueObject: '"></span>
+    <span bind-value="'' + inputValueObject.empty + inputValueObject.boolean + inputValueObject.number + inputValueObject.string"></span>
+    &nbsp;<span bind-value="inputTypeOf(inputValueObject)"></span>
+    <br/>
+    <span bind-value="'inputValueArray: '"></span>
+    Access with index:&nbsp;
+    <span bind-value="'' + inputValueArray[0] + inputValueArray[1] + inputValueArray[2] + inputValueArray[3]"></span>
+    &nbsp;Access with bind for:
+    <span bind-for="value in inputValueArray" bind-value="value"></span>
+    &nbsp;<span bind-value="inputTypeOf(inputValueArray)"></span>
+    <br/>
+    <span bind-value="'inputValueDate: '"></span>
+    <span bind-value="inputValueDate"></span>
+    &nbsp;<span bind-value="inputTypeOf(inputValueDate)"></span>
+    <br/>
+    <span bind-value="'inputValueFunction: '"></span>
+    <span bind-value="inputValueFunction()"></span>
+    <hr/>
+
+    Thirrja e kontrollerit tjeter
+    <div controller="test-type"
+         input="inputEmpty: inputValueEmpty, inputBoolean: inputValueBoolean, inputNumber: inputValueNumber, inputString: inputValueString, inputObject: inputValueObject, inputArray: inputValueArray, inputFunction: inputValueFunction, inputDate: inputValueDate"></div>
+
+    <!--Test area-->
+    <hr/>
+    <br/>
+
+    <span bind-value="'inputValueObjectFunction: '"></span>
+    <span bind-for="ivof in inputValueObjectFunction()" bind-value="ivof + ''"></span>
+
+    <!--End test area-->
+
+</div>

@@ -1,0 +1,65 @@
+<div>
+    <hr/>
+    <span class="title">github-results</span>
+    </br>
+    <div>
+        You was searching for: <span bind-value="data.term"></span>
+    </div>
+    <div bind-if="data.type === 'users'">
+        Kind: <span bind-value="data.type"></span>
+        <ul>
+            <li bind-for="d in data.textData">
+                <span bind-value="d.id"></span>
+                <span bind-value="d.html_url"></span>
+                <span bind-value="d.login"></span>
+                <span bind-value="d.score"></span>
+            </li>
+        </ul>
+    </div>
+    </br>
+    <div bind-if="data.type === 'repositories'">
+        Kind: <span bind-value="data.type"></span>
+        <ul>
+            <li bind-for="d in data.data">
+                <span bind-value="d.id"></span>
+                <span bind-value="d.name"></span>
+                <span bind-value="d.forks"></span>
+                <span bind-value="d.score"></span>
+            </li>
+        </ul>
+        <ul>
+            <li bind-for="d in data.data">
+                <span bind-value="sort()"></span>
+            </li>
+        </ul>
+    </div>
+
+    <div bind-if=" data.type==='repositories'">
+        <ul>
+            <li bind-for=" e in data.extra">
+                <span bind-value="data.extra.type"></span>
+            </li>
+        </ul>
+        </br>
+        <ul>
+            <span>Kushti qe login='rexhinaIdobet'</span>
+
+            <li>
+                <span bind-value="data.info"></span>
+                </br>
+                <span bind-value="data.str"></span>
+                </br>
+                <span bind-value="data.st"></span>
+                </br>
+                <span bind-value="data.ok"></span>
+                </br>
+                <span bind-value="data.sr"></span>
+                </br>
+                <span bind-value="data.k"></span>
+                </br>
+                <span bind-value="data.up"></span>
+            </li>
+
+        </ul>
+    </div>
+</div>

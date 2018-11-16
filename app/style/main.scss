@@ -1,0 +1,57 @@
+@import "themes/base";
+
+li {
+  color: $themes-color-danger;
+}
+
+button {
+  color: $themes-color-success;
+  font-weight: $themes-font-weight;
+  font-size: medium;
+  background-size: $themes-bg-size;
+}
+
+input {
+  color: $themes-color-warn;
+  font-weight: $themes-font-weight;
+}
+
+textarea {
+  color: $themes-color-info;
+}
+
+p {
+  color: $themes-bg;
+}
+
+span.title {
+  color: $themes-color-second;
+  font-weight: $themes-font-weight;
+  font-size: larger;
+}
+
+button.search {
+  color: $themes-bg-primary;
+  border: $themes-border;
+}
+
+span.element {
+  font-size: large;
+  font-weight: bolder;
+}
+
+input.place {
+  width: $themes-width;
+  height: $themes-height;
+  border: $themes-border;
+}
+
+button.return {
+  color: #006064;
+  box-sizing: border-box;
+}
+
+span.txt {
+  color: #AD1457;
+  font-family: $themes-ff;
+}
