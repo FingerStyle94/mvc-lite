@@ -33,6 +33,13 @@
 })(Function('return this')());
 (function (global) {
 
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
+(function (global) {
+
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -164,13 +171,6 @@
 
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
         var TestModel = global.App.getModel('TestModel');
         $scope.clientData = false;
@@ -189,6 +189,149 @@
     });
 })(Function('return this')());
 
+(function (global) {
+
+    global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
+        $scope.getInput('item');
+        console.log($scope.item);
+        /** Getting the input items from the source*/
+    });
+})(Function('return this')());
+(function (global) {
+
+    global.App.Controller('cmd-console-list', './components/cmd-console/', function ($scope, _update) {
+        $scope.getInput('list');
+        console.log('cmd-console-list',$scope.list);
+    });
+    /** Getting the input list  of the items in the source*/
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('cmd-console', './components/cmd-console/', function ($scope, _update) {
+            var TestModel = global.App.getModel('TestModel');
+            $scope.source = TestModel.testData();
+            $scope.result = null;
+            $scope.validateCommand = false;
+
+            console.log('cmd-console', $scope.source);
+
+            /** Command processing is a function that will then include the command validation function which will validate commands that are either # or with: depending on the command */
+
+            $scope.processCommand = function () {
+                console.log('cmd-console:processCommand', this.name, this.type, this.value);
+                var vc = validateCommand(this.value);
+                processResult(vc.command, vc.value);
+                _update();
+            };
+
+            /** Validating command will catch the command in two parts, separating in too variables the command and value*/
+
+            function validateCommand(rawCommand) {
+                var v = '', c = '', parts, sharpCommand = ['about', 'help', 'author'];
+                if (rawCommand.indexOf(':') > 0) {
+                    parts = rawCommand.split(':');
+                    c = parts[0];
+                    v = parts[1];
+                } else if (rawCommand.indexOf('#') === 0) {
+                    parts = rawCommand.split('#');
+                    c = '#';
+                    v = parts[1];
+                }
+                console.log('console-console:validateCommand', rawCommand, c, v);
+                switch (c) {
+                    case '#':
+                        if (sharpCommand.indexOf(v) === -1) {
+                            console.log('console-console:validateCommand [' + v + '] command does not exists in: ', sharpCommand);
+                            $scope.validateCommand = 'This command does not exist';
+                        }
+                        break;
+                    default:
+                        if (['level'].indexOf(c) > -1) {
+                            c = 'callback';
+                        }
+                        if ($scope.source.array.indexOf(c) === -1) {
+                            console.log('console-console:validateCommand [' + c + ':' + v + '] command does not exists in: ', $scope.source.array);
+                            $scope.validateCommand = 'Please put another command';
+                        }
+                }
+                return {command: c, value: v};
+            }
+
+
+            /** Processing results will include two sub-functions of processing two types of commands. */
+
+            function processResult(command, value) {
+                if (!$scope.validateCommand) {
+                    if (command === '#') {
+                        $scope.result = processSharpCommand(value);
+                    } else {
+                        $scope.result = processColonCommand(command, value);
+                    }
+                    _update();
+                    console.log('cmd-console:processResult', command, value, $scope.source, $scope.result);
+                }
+            }
+
+            /** Processing the sharpCommand  of (# commands) */
+
+            function processSharpCommand(command) {
+                switch (command) {
+                    case 'about':
+                        return 'Description for about!';
+                    case 'help':
+                        return 'Do you need help ?';
+                    case 'author':
+                        return 'Rexhina Prifti';
+                    default:
+                        return 'This command does not exist!';
+                }
+
+            }
+
+            /** Processing the colonCommand  of (: commands)*/
+            function processColonCommand(command, value) {
+                return processColon(command, value, $scope.source);
+            }
+
+            function processColon(key, value, source) {
+                if (!source) return [];
+                var result = [];
+
+                if (checkRegExp(value) && new RegExp(value).test(source[key])) {
+                    result.push(source);
+                } else if (source[key] === castValue(key, value)) {
+                    result.push(source);
+                }
+                return result.concat(processColon(key, value, source.object));
+            }
+
+            /** Processing the value with castValue parameter */
+            function castValue(type, value) {
+                switch (type) {
+                    case 'boolean':
+                        return value === 'false' ? false : true;
+                    default:
+                        return value;
+                }
+            }
+
+            /** Creating a function for checking  if the value is a RegExp*/
+
+            function checkRegExp(value) {
+                var isValid = true;
+                try {
+                    new RegExp(value);
+                } catch (e) {
+                    console.error(e);
+                    isValid = false;
+                }
+                return isValid;
+            }
+        }
+    );
+
+})(Function('return this')());
 (function (global) {
 
     global.App.Controller('github-results', './components/github/', function ($scope, _update) {
@@ -386,147 +529,65 @@
 
 (function (global) {
 
-    global.App.Controller('cmd-console-item', './components/cmd-console/', function ($scope, _update) {
-        $scope.getInput('item');
-        console.log($scope.item);
-        /** Getting the input items from the source*/
-    });
-})(Function('return this')());
-(function (global) {
+    global.App.Controller('person', './components/person/', function ($scope, _update) {
+        var PersonModel = global.App.getModel('PersonModel');
+        /** Creating  the Person controller which will control the person view*/
+        $scope.fullNameLabel = 'Full Name: ';
+        $scope.fullName = null;
+        $scope.age = null;
+        $scope.proffesion = null;
+        $scope.BMI = null;
+        $scope.childWeight = null;
+        $scope.childHeight = null;
+        $scope.month = null;
 
-    global.App.Controller('cmd-console-list', './components/cmd-console/', function ($scope, _update) {
-        $scope.getInput('list');
-        console.log('cmd-console-list',$scope.list);
-    });
-    /** Getting the input list  of the items in the source*/
-})(Function('return this')());
+        $scope.height = 0;
+        $scope.weight = 0;
+        $scope.firstName = '';
+        $scope.lastName = '';
+        $scope.birthday = '';
+        $scope.profession = '';
 
-(function (global) {
+        $scope.inputFocusout = function () {
+            switch (this.name) {
+                case 'firstName':
+                    $scope.firstName = this.value;
+                    this.size = 40;
+                    break;
+                case 'lastName':
+                    this.bold = '';
+                    $scope.lastName = this.value;
+                    break;
+                case 'birthday':
+                    $scope.birthday = this.value;
+                    break;
+                case 'profession':
+                    $scope.profession = this.value;
+                    break;
+                case 'height':
+                    $scope.height = this.value;
+                    break;
+                case 'month':
+                    $scope.month = this.value;
+                    break;
 
-    global.App.Controller('cmd-console', './components/cmd-console/', function ($scope, _update) {
-            var TestModel = global.App.getModel('TestModel');
-            $scope.source = TestModel.testData();
-            $scope.result = null;
-            $scope.validateCommand = false;
-
-            console.log('cmd-console', $scope.source);
-
-            /** Command processing is a function that will then include the command validation function which will validate commands that are either # or with: depending on the command */
-
-            $scope.processCommand = function () {
-                console.log('cmd-console:processCommand', this.name, this.type, this.value);
-                var vc = validateCommand(this.value);
-                processResult(vc.command, vc.value);
-                _update();
-            };
-
-            /** Validating command will catch the command in two parts, separating in too variables the command and value*/
-
-            function validateCommand(rawCommand) {
-                var v = '', c = '', parts, sharpCommand = ['about', 'help', 'author'];
-                if (rawCommand.indexOf(':') > 0) {
-                    parts = rawCommand.split(':');
-                    c = parts[0];
-                    v = parts[1];
-                } else if (rawCommand.indexOf('#') === 0) {
-                    parts = rawCommand.split('#');
-                    c = '#';
-                    v = parts[1];
-                }
-                console.log('console-console:validateCommand', rawCommand, c, v);
-                switch (c) {
-                    case '#':
-                        if (sharpCommand.indexOf(v) === -1) {
-                            console.log('console-console:validateCommand [' + v + '] command does not exists in: ', sharpCommand);
-                            $scope.validateCommand = 'This command does not exist';
-                        }
-                        break;
-                    default:
-                        if (['level'].indexOf(c) > -1) {
-                            c = 'callback';
-                        }
-                        if ($scope.source.array.indexOf(c) === -1) {
-                            console.log('console-console:validateCommand [' + c + ':' + v + '] command does not exists in: ', $scope.source.array);
-                            $scope.validateCommand = 'Please put another command';
-                        }
-                }
-                return {command: c, value: v};
-            }
-
-
-            /** Processing results will include two sub-functions of processing two types of commands. */
-
-            function processResult(command, value) {
-                if (!$scope.validateCommand) {
-                    if (command === '#') {
-                        $scope.result = processSharpCommand(value);
-                    } else {
-                        $scope.result = processColonCommand(command, value);
-                    }
-                    _update();
-                    console.log('cmd-console:processResult', command, value, $scope.source, $scope.result);
-                }
-            }
-
-            /** Processing the sharpCommand  of (# commands) */
-
-            function processSharpCommand(command) {
-                switch (command) {
-                    case 'about':
-                        return 'Description for about!';
-                    case 'help':
-                        return 'Do you need help ?';
-                    case 'author':
-                        return 'Rexhina Prifti';
-                    default:
-                        return 'This command does not exist!';
-                }
 
             }
-
-            /** Processing the colonCommand  of (: commands)*/
-            function processColonCommand(command, value) {
-                return processColon(command, value, $scope.source);
-            }
-
-            function processColon(key, value, source) {
-                if (!source) return [];
-                var result = [];
-
-                if (checkRegExp(value) && new RegExp(value).test(source[key])) {
-                    result.push(source);
-                } else if (source[key] === castValue(key, value)) {
-                    result.push(source);
-                }
-                return result.concat(processColon(key, value, source.object));
-            }
-
-            /** Processing the value with castValue parameter */
-            function castValue(type, value) {
-                switch (type) {
-                    case 'boolean':
-                        return value === 'false' ? false : true;
-                    default:
-                        return value;
-                }
-            }
-
-            /** Creating a function for checking  if the value is a RegExp*/
-
-            function checkRegExp(value) {
-                var isValid = true;
-                try {
-                    new RegExp(value);
-                } catch (e) {
-                    console.error(e);
-                    isValid = false;
-                }
-                return isValid;
-            }
+            console.log('person:inputFocusout', this.name, this.value, this.size, this.bold);
+            _update();
+        };
+        $scope.calculateResult = function () {
+            $scope.fullName = PersonModel.getPersonFullName($scope.firstName, $scope.lastName);
+            var parts = $scope.birthday.split(',');
+            $scope.age = PersonModel.getPersonAge(new Date(parts[0], parts[1], parts[2]));
+            $scope.proffesion = PersonModel.getPersonProfession($scope.profession);
+            $scope.BMI = PersonModel.getPersonBMI($scope.weight, $scope.height);
+            $scope.month = PersonModel.getBabyInfo($scope.childWeight, $scope.childHeight, $scope.month);
+            _update();
         }
-    );
-
+    });
 })(Function('return this')());
+
 (function (global) {
 
     global.App.Controller('provafinale', './components/test/', function ($scope, _update) {
@@ -728,67 +789,6 @@
     });
 
 })(Function('return this')());
-(function (global) {
-
-    global.App.Controller('person', './components/person/', function ($scope, _update) {
-        var PersonModel = global.App.getModel('PersonModel');
-        /** Creating  the Person controller which will control the person view*/
-        $scope.fullNameLabel = 'Full Name: ';
-        $scope.fullName = null;
-        $scope.age = null;
-        $scope.proffesion = null;
-        $scope.BMI = null;
-        $scope.childWeight = null;
-        $scope.childHeight = null;
-        $scope.month = null;
-
-        $scope.height = 0;
-        $scope.weight = 0;
-        $scope.firstName = '';
-        $scope.lastName = '';
-        $scope.birthday = '';
-        $scope.profession = '';
-
-        $scope.inputFocusout = function () {
-            switch (this.name) {
-                case 'firstName':
-                    $scope.firstName = this.value;
-                    this.size = 40;
-                    break;
-                case 'lastName':
-                    this.bold = '';
-                    $scope.lastName = this.value;
-                    break;
-                case 'birthday':
-                    $scope.birthday = this.value;
-                    break;
-                case 'profession':
-                    $scope.profession = this.value;
-                    break;
-                case 'height':
-                    $scope.height = this.value;
-                    break;
-                case 'month':
-                    $scope.month = this.value;
-                    break;
-
-
-            }
-            console.log('person:inputFocusout', this.name, this.value, this.size, this.bold);
-            _update();
-        };
-        $scope.calculateResult = function () {
-            $scope.fullName = PersonModel.getPersonFullName($scope.firstName, $scope.lastName);
-            var parts = $scope.birthday.split(',');
-            $scope.age = PersonModel.getPersonAge(new Date(parts[0], parts[1], parts[2]));
-            $scope.proffesion = PersonModel.getPersonProfession($scope.profession);
-            $scope.BMI = PersonModel.getPersonBMI($scope.weight, $scope.height);
-            $scope.month = PersonModel.getBabyInfo($scope.childWeight, $scope.childHeight, $scope.month);
-            _update();
-        }
-    });
-})(Function('return this')());
-
 (function (global) {
     /** On that part we take the input that was taken by the first component user-info */
     global.App.Controller('user-info-results', './components/user-info/', function ($scope, _update) {
