@@ -60,7 +60,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('js/**/*.js', ['compile-mvc']);
-    gulp.watch('app/**/*.js', ['compile-app']);
-    gulp.watch('app/style/**/*.scss', ['sass']);
+    gulp.watch('js/**/*.js', gulp.series(['compile-mvc']));
+    gulp.watch('app/**/*.js', gulp.series(['compile-app']));
+    gulp.watch('app/style/**/*.scss', gulp.series(['sass']));
 });
