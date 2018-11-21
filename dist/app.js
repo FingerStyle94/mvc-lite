@@ -33,13 +33,6 @@
 })(Function('return this')());
 (function (global) {
 
-    global.App.Pipe('split', function (value, data) {
-        return value.split(data);
-    });
-
-})(Function('return this')());
-(function (global) {
-
     global.App.Model('GitHub', function (setData) {
         var Api = "https://api.github.com/search/";
         this.entities = ['repositories', 'users'];
@@ -108,6 +101,22 @@
 
 (function (global) {
 
+    global.App.Model('PostModel', function (setData) {
+
+
+
+        this.getPostTitle = function (title) {
+            return title;
+        };
+        this.getPostBody = function (body) {
+            return body;
+        };
+    });
+
+})(Function('return this')());
+
+(function (global) {
+
     global.App.Model('TestModel', function (setData) {
         /** Creating  a function (this.testData) which will include some elements inside of an object */
 
@@ -169,6 +178,13 @@
 
 })(Function('return this')());
 
+(function (global) {
+
+    global.App.Pipe('split', function (value, data) {
+        return value.split(data);
+    });
+
+})(Function('return this')());
 (function (global) {
 
     global.App.Controller('client-info', './components/client-info/', function ($scope, _update) {
@@ -583,6 +599,42 @@
             $scope.proffesion = PersonModel.getPersonProfession($scope.profession);
             $scope.BMI = PersonModel.getPersonBMI($scope.weight, $scope.height);
             $scope.month = PersonModel.getBabyInfo($scope.childWeight, $scope.childHeight, $scope.month);
+            _update();
+        }
+    });
+})(Function('return this')());
+
+(function (global) {
+
+    global.App.Controller('post', './components/post/', function ($scope, _update) {
+        var PostModel = global.App.getModel('PostModel');
+
+
+        $scope.title = null;
+        $scope.body = null;
+
+
+        $scope.title = '';
+        $scope.body = '';
+
+        $scope.inputOut = function () {
+            switch (this.name) {
+                case 'title':
+                    $scope.title = this.value;
+                    break;
+                case 'body':
+                    $scope.body = this.value;
+                    break;
+
+
+            }
+            console.log('post:inputOut', this.name, this.value, this.size, this.bold);
+            _update();
+        };
+        $scope.Posto = function () {
+            $scope.title = PostModel.getPostTitle($scope.title);
+            $scope.body = PostModel.getPostBody($scope.body);
+
             _update();
         }
     });

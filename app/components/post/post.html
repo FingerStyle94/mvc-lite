@@ -1,0 +1,17 @@
+<div >
+    <hr/>
+    <span class="title">Post</span>
+    <br/>
+    <b><span style="color:blue; font-size: 14pt" bind-value="'Title:'"></span></b>
+    <i><span  bind-value="title"></span></i>
+    <br/>
+    <b><span style="color:darkblue; font-size: 14pt" bind-value="'Body: '"></span></b>
+    <i><span  bind-value="body"></span></i>
+    <br/><br/>
+    <input type="text" id="title" name="title" placeholder="Title" bind-events="focusout: inputOut()">
+    <br/><br/>
+    <input type="textarea" name="body" placeholder="Body" style="width:170px; height:50px"bind-events="focusout: inputOut()">
+    <br/>
+    <br/>
+    <button bind-events="click: Posto()">Postim</button>
+</div>
