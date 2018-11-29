@@ -1,0 +1,22 @@
+<div>
+    <hr/>
+    <span class="title">Employeed Component</span></br>
+    <span class="Title">Employeed Info For Test</span></br>
+    <span>Please put the data for Employeed</span></br>
+    <span>FirstName</span>
+    <input type="text" id="firstName" name="firstName" placeholder="First Name" bind-events="focusout:inputFocusout()">
+    <span>LastName</span>
+    <input type="text" id="lastName" name="lastName" placeholder="Last Name" bind-events="focusout:inputFocusout()">
+    <span>Proffesion</span>
+    <input type="text" id="profession" name="profession" placeholder="Profession" bind-events="focusout:inputFocusout()"></br><br/>
+    <button bind-events="click: showData()">Show Data</button></br>
+
+    <b><span bind-value="FullName:"></span></b>
+    <i><span bind-value="fullName"></span></i>
+    <br/>
+    <b><span  bind-value="'Profession: '"></span></b>
+    <i> <span bind-value="profession"></span></i>
+    <br/>
+</hr>
+</div>
+<hr></hr>
