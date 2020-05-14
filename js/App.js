@@ -1,23 +1,25 @@
-(function(global) {
-
+(function (global) {
+    global.ENV = {
+        Version: '0.1'
+    };
     var Controllers = {},
-        Models      = {},
+        Models = {},
         Injectables = {},
-        Pipes       = {},
+        Pipes = {},
         routerInstance;
 
     global.App = {
         // Getters
-        getController: function(name) {
+        getController: function (name) {
             return Controllers[name];
         },
-        getModel: function(name) {
+        getModel: function (name) {
             return Models[name];
         },
-        getInjectable: function(name) {
+        getInjectable: function (name) {
             return Injectables[name];
         },
-        getPipe: function(name) {
+        getPipe: function (name) {
             return Pipes[name];
         },
 
@@ -33,14 +35,14 @@
     function bootstrapApp(componentName, options) {
         var TAG = "[Bootstrap]";
 
-        if(typeof options === 'object')
+        if (typeof options === 'object')
             global.Utils.Object.updateObject(global.Config, options);
 
         var compEl = document.querySelector('*[controller="' + componentName + '"]');
-        if(compEl && compEl.nodeType === 1) {
+        if (compEl && compEl.nodeType === 1) {
             try {
                 var result = global.Core.Bootstrap(compEl);
-            } catch(err) {
+            } catch (err) {
                 console.error(TAG, err.message || err);
             }
             return result;
@@ -57,7 +59,7 @@
 
             // Returning a Controller with the generated View
             Controllers[name] = new global.Base.Controller(name, view, constructor);
-        } catch(err) {
+        } catch (err) {
             console.error(TAG, err.message);
         }
     }
@@ -66,7 +68,7 @@
         var TAG = "[Injectable]";
         try {
             Injectables[name] = new global.Base.Injectable(name, options);
-        } catch(err) {
+        } catch (err) {
             console.error(TAG, err.message);
         }
     }
@@ -75,7 +77,7 @@
         var TAG = "[Model]";
         try {
             Models[name] = new global.Base.Model(name, initFunc);
-        } catch(err) {
+        } catch (err) {
             console.error(TAG, err.message);
         }
     }
@@ -84,13 +86,13 @@
         var TAG = "[Pipe]";
         try {
             Pipes[name] = new global.Base.Pipe(name, func);
-        } catch(err) {
+        } catch (err) {
             console.error(TAG, err.message);
         }
     }
 
     function getRouter(routes) {
-        if(!routerInstance)
+        if (!routerInstance)
             routerInstance = new global.Core.Router(routes);
 
         return routerInstance;

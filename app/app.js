@@ -1,9 +1,9 @@
-(function(global) {
+(function (global) {
 
-    global.App.Controller('app', './', function($scope, _update) {
+    global.App.Controller('app', './', function ($scope, _update) {
         $scope.title = "App works!";
 
-        setTimeout(function() {
+        setTimeout(function () {
             $scope.title = "Hello World!";
             _update();
         }, 3000)
